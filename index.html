@@ -36,6 +36,7 @@
     }
     input[type="text"],
     input[type="date"],
+    input[type="time"],
     textarea {
       width: 100%;
       padding: 8px;
@@ -381,6 +382,15 @@
 
     <fieldset>
       <legend>Work Summary</legend>
+
+      <label>Start Time
+        <input type="time" id="startTime" />
+      </label>
+
+      <label>Finish Time
+        <input type="time" id="finishTime" />
+      </label>
+
       <label>What works were completed today?
         <textarea id="worksCompletedToday" placeholder="Briefly describe the main tasks completed on site today."></textarea>
       </label>
@@ -620,6 +630,9 @@
             safetyResponses.push({ question, answer });
           });
           const safetyNotes = document.getElementById("safetyNotes").value || "";
+
+          const startTime  = document.getElementById("startTime").value || "";
+          const finishTime = document.getElementById("finishTime").value || "";
 
           const worksCompletedToday = document.getElementById("worksCompletedToday").value || "";
           const notesForClient      = document.getElementById("notesForClient").value || "";
@@ -976,6 +989,8 @@
 
           // ---- Work Summary ----
           addSectionTitle("Work Summary");
+          addLabeledBox("Start Time", startTime);
+          addLabeledBox("Finish Time", finishTime);
           addLabeledBox("What works were completed today?", worksCompletedToday);
 
           if (challengeRows.length > 0) {
