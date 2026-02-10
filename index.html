@@ -1,1177 +1,1099 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Forestme – Daily Site Report</title>
-  <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-      background: #f5f5f5;
-    }
-    h1 { text-align: center; margin-bottom: 1rem; }
-    form {
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    fieldset {
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      margin-bottom: 16px;
-      padding: 12px 16px;
-    }
-    legend {
-      font-weight: 600;
-      padding: 0 6px;
-    }
-    label {
-      display: block;
-      font-size: 0.9rem;
-      margin-top: 8px;
-      margin-bottom: 4px;
-    }
-    input[type="text"],
-    input[type="date"],
-    input[type="time"],
-    textarea {
-      width: 100%;
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      font-size: 0.95rem;
-      box-sizing: border-box;
-    }
-    textarea { min-height: 70px; resize: vertical; }
-    input[type="file"] { margin-top: 6px; }
-    button {
-      margin-top: 16px;
-      padding: 10px 16px;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      background: #14532d;
-      color: #fff;
-    }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .small-note { font-size: 0.8rem; color: #555; }
+<meta charset="UTF-8" />
+<title>Forestme – Daily Site Report</title>
+<style>
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f5f5f5;
+}
+h1 { text-align: center; margin-bottom: 1rem; }
+form {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+fieldset {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+}
+legend {
+  font-weight: 600;
+  padding: 0 6px;
+}
+label {
+  display: block;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+input[type="text"],
+input[type="date"],
+input[type="time"],
+textarea {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+textarea { min-height: 70px; resize: vertical; }
+input[type="file"] { margin-top: 6px; }
+button {
+  margin-top: 16px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #14532d;
+  color: #fff;
+}
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+.small-note { font-size: 0.8rem; color: #555; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 8px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 6px;
-      font-size: 0.9rem;
-      vertical-align: top;
-    }
-    th {
-      background: #f3f3f3;
-      font-weight: 600;
-      text-align: left;
-    }
-    td input[type="text"],
-    td textarea {
-      width: 100%;
-      border: none;
-      padding: 4px;
-      font-size: 0.9rem;
-      box-sizing: border-box;
-    }
-    td textarea {
-      resize: vertical;
-      min-height: 40px;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 6px;
+  font-size: 0.9rem;
+  vertical-align: top;
+}
+th {
+  background: #f3f3f3;
+  font-weight: 600;
+  text-align: left;
+}
+td input[type="text"],
+td textarea {
+  width: 100%;
+  border: none;
+  padding: 4px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+td textarea {
+  resize: vertical;
+  min-height: 40px;
+}
 
-    .photo-block {
-      border: 1px solid #eee;
-      border-radius: 6px;
-      padding: 8px;
-      margin-bottom: 8px;
-      background: #fafafa;
-    }
-    .photo-block-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
+.photo-block {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
+  background: #fafafa;
+}
+.photo-block-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
 
-    .numbered-list {
-      margin-top: 4px;
-    }
-    .numbered-row {
-      display: flex;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-    .numbered-row span {
-      display: inline-block;
-      width: 18px;
-      font-size: 0.85rem;
-      color: #555;
-    }
-    .numbered-row input {
-      flex: 1;
-    }
+.numbered-list {
+  margin-top: 4px;
+}
+.numbered-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.numbered-row span {
+  display: inline-block;
+  width: 18px;
+  font-size: 0.85rem;
+  color: #555;
+}
+.numbered-row input {
+  flex: 1;
+}
 
-    #safetyTable th:nth-child(2),
-    #safetyTable th:nth-child(3),
-    #safetyTable td:nth-child(2),
-    #safetyTable td:nth-child(3) {
-      text-align: center;
-      width: 60px;
-    }
-  </style>
+#safetyTable th:nth-child(2),
+#safetyTable th:nth-child(3),
+#safetyTable td:nth-child(2),
+#safetyTable td:nth-child(3) {
+  text-align: center;
+  width: 60px;
+}
+</style>
 </head>
 <body>
-  <h1>Forestme – Daily Site Report</h1>
+<h1>Forestme – Daily Site Report</h1>
 
-  <form id="reportForm">
-    <fieldset>
-      <legend>Branding</legend>
-      <label>Forestme Logo (required)
-        <input type="file" id="logoInput" accept="image/*" required />
+<form id="reportForm">
+  <fieldset>
+    <legend>Branding</legend>
+    <label>Forestme Logo (required)
+      <input type="file" id="logoInput" accept="image/*" required />
+    </label>
+    <p class="small-note">
+      Select your Forestme logo. It will be printed at the top of page 1 in the PDF.
+    </p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Job Details</legend>
+    <label>Client Name
+      <input type="text" id="clientName" />
+    </label>
+    <label>Project / Site Name
+      <input type="text" id="projectName" />
+    </label>
+    <label>Location
+      <input type="text" id="location" />
+    </label>
+    <label>Date
+      <input type="date" id="date" />
+    </label>
+    <label>Supervisor
+      <input type="text" id="supervisor" />
+    </label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Job Description</legend>
+    <label>Short Description
+      <textarea id="shortDescription" placeholder="Basic outline of the day's work according to the briefing."></textarea>
+    </label>
+
+    <label>Today's Objectives</label>
+    <div class="numbered-list">
+      <div class="numbered-row"><span>1.</span><input type="text" id="objective1" /></div>
+      <div class="numbered-row"><span>2.</span><input type="text" id="objective2" /></div>
+      <div class="numbered-row"><span>3.</span><input type="text" id="objective3" /></div>
+      <div class="numbered-row"><span>4.</span><input type="text" id="objective4" /></div>
+      <div class="numbered-row"><span>5.</span><input type="text" id="objective5" /></div>
+      <div class="numbered-row"><span>6.</span><input type="text" id="objective6" /></div>
+    </div>
+
+    <label>Potential Issues</label>
+    <div class="numbered-list">
+      <div class="numbered-row"><span>1.</span><input type="text" id="potentialIssue1" /></div>
+      <div class="numbered-row"><span>2.</span><input type="text" id="potentialIssue2" /></div>
+      <div class="numbered-row"><span>3.</span><input type="text" id="potentialIssue3" /></div>
+      <div class="numbered-row"><span>4.</span><input type="text" id="potentialIssue4" /></div>
+      <div class="numbered-row"><span>5.</span><input type="text" id="potentialIssue5" /></div>
+      <div class="numbered-row"><span>6.</span><input type="text" id="potentialIssue6" /></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Safety Report – Take 5</legend>
+    <p class="small-note">Complete before work commences and if conditions change.</p>
+
+    <table id="safetyTable">
+      <thead>
+        <tr>
+          <th>Safety Check</th>
+          <th>Yes</th>
+          <th>No</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1. Do I have the correct PPE for today’s tasks and site conditions?</td>
+          <td><input type="radio" name="safety1" value="Yes"></td>
+          <td><input type="radio" name="safety1" value="No"></td>
+        </tr>
+        <tr>
+          <td>2. Is all PPE, tools and equipment in safe working condition?</td>
+          <td><input type="radio" name="safety2" value="Yes"></td>
+          <td><input type="radio" name="safety2" value="No"></td>
+        </tr>
+        <tr>
+          <td>3. Do I have the correct tools and equipment to complete today’s tasks safely?</td>
+          <td><input type="radio" name="safety3" value="Yes"></td>
+          <td><input type="radio" name="safety3" value="No"></td>
+        </tr>
+        <tr>
+          <td>4. Am I clear on today’s scope of works and work areas?</td>
+          <td><input type="radio" name="safety4" value="Yes"></td>
+          <td><input type="radio" name="safety4" value="No"></td>
+        </tr>
+        <tr>
+          <td>5. Have I reviewed and understood the applicable SWMS / JSA and site rules?</td>
+          <td><input type="radio" name="safety5" value="Yes"></td>
+          <td><input type="radio" name="safety5" value="No"></td>
+        </tr>
+        <tr>
+          <td>6. Do I have the required training and competency for today’s tasks?</td>
+          <td><input type="radio" name="safety6" value="Yes"></td>
+          <td><input type="radio" name="safety6" value="No"></td>
+        </tr>
+        <tr>
+          <td>7. Am I fit for work today (not fatigued and free from drugs/alcohol)?</td>
+          <td><input type="radio" name="safety7" value="Yes"></td>
+          <td><input type="radio" name="safety7" value="No"></td>
+        </tr>
+        <tr>
+          <td>8. Am I well enough to work safely today?</td>
+          <td><input type="radio" name="safety8" value="Yes"></td>
+          <td><input type="radio" name="safety8" value="No"></td>
+        </tr>
+        <tr>
+          <td>9. Do I have sufficient water, food and rest breaks planned?</td>
+          <td><input type="radio" name="safety9" value="Yes"></td>
+          <td><input type="radio" name="safety9" value="No"></td>
+        </tr>
+        <tr>
+          <td>10. Have I checked the work area for slip, trip and fall hazards?</td>
+          <td><input type="radio" name="safety10" value="Yes"></td>
+          <td><input type="radio" name="safety10" value="No"></td>
+        </tr>
+        <tr>
+          <td>11. Are environmental and heritage controls understood and in place?</td>
+          <td><input type="radio" name="safety11" value="Yes"></td>
+          <td><input type="radio" name="safety11" value="No"></td>
+        </tr>
+        <tr>
+          <td>12. Are weather conditions suitable and controls applied?</td>
+          <td><input type="radio" name="safety12" value="Yes"></td>
+          <td><input type="radio" name="safety12" value="No"></td>
+        </tr>
+        <tr>
+          <td>13. Are controls in place for vehicle, plant and contractor interaction?</td>
+          <td><input type="radio" name="safety13" value="Yes"></td>
+          <td><input type="radio" name="safety13" value="No"></td>
+        </tr>
+        <tr>
+          <td>14. Do I know who the site supervisor / safety contact is?</td>
+          <td><input type="radio" name="safety14" value="Yes"></td>
+          <td><input type="radio" name="safety14" value="No"></td>
+        </tr>
+        <tr>
+          <td>15. Do I know the site emergency procedures and muster point?</td>
+          <td><input type="radio" name="safety15" value="Yes"></td>
+          <td><input type="radio" name="safety15" value="No"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <label style="margin-top:10px;">Additional Safety Notes
+      <textarea id="safetyNotes" placeholder="Record hazards, controls or actions required if any answer is ‘No’."></textarea>
+    </label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Quantities & Outputs</legend>
+    <p class="small-note">Use this table for plants, jute, mulch, pins, etc. Fill as many rows as you need.</p>
+    <table id="qtyTable">
+      <thead>
+        <tr>
+          <th style="width: 25%;">Unit Type</th>
+          <th style="width: 15%;">Amount</th>
+          <th>Conditions / Reasons</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="text" class="qty-unit" placeholder="e.g. Trees, Jute, Pins" /></td>
+          <td><input type="text" class="qty-amount" placeholder="e.g. 3,500" /></td>
+          <td><textarea class="qty-conditions" placeholder="e.g. Area A only, compacted batter, etc."></textarea></td>
+        </tr>
+        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
+        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
+        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
+        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
+        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
+        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
+        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
+        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
+        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
+      </tbody>
+    </table>
+  </fieldset>
+
+  <fieldset>
+    <legend>Work Summary</legend>
+
+    <label>Start Time
+      <input type="time" id="startTime" />
+    </label>
+
+    <label>Finish Time
+      <input type="time" id="finishTime" />
+    </label>
+
+    <label>What works were completed today?
+      <textarea id="worksCompletedToday" placeholder="Briefly describe the main tasks completed on site today."></textarea>
+    </label>
+
+    <label>Challenges &amp; Solutions</label>
+    <table id="challengeTable">
+      <thead>
+        <tr>
+          <th style="width: 50%;">Challenges</th>
+          <th>Solutions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><textarea class="challenge-text"></textarea></td><td><textarea class="solution-text"></textarea></td></tr>
+        <tr><td><textarea class="challenge-text"></textarea></td><td><textarea class="solution-text"></textarea></td></tr>
+        <tr><td><textarea class="challenge-text"></textarea></td><td><textarea class="solution-text"></textarea></td></tr>
+        <tr><td><textarea class="challenge-text"></textarea></td><td><textarea class="solution-text"></textarea></td></tr>
+        <tr><td><textarea class="challenge-text"></textarea></td><td><textarea class="solution-text"></textarea></td></tr>
+      </tbody>
+    </table>
+
+    <label>Notes for Client
+      <textarea id="notesForClient" placeholder="Any additional notes or observations relevant to the client."></textarea>
+    </label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Work Photos</legend>
+    <p class="small-note">
+      Upload up to ten key photos from the day.<br>
+      Each photo must have a description explaining what we’re looking at.
+    </p>
+
+    <div class="photo-block">
+      <div class="photo-block-title">Photo 1</div>
+      <label>Image <input type="file" id="photo1" accept="image/*" /></label>
+      <label>Description (required if photo is added)
+        <textarea id="photoDesc1" placeholder="e.g. Overview of Area A batter after jute install."></textarea>
       </label>
-      <p class="small-note">
-        Select your Forestme logo. It will be printed at the top of page 1 in the PDF.
-      </p>
-    </fieldset>
+    </div>
 
-    <fieldset>
-      <legend>Job Details</legend>
-      <label>Client Name
-        <input type="text" id="clientName" />
-      </label>
-      <label>Project / Site Name
-        <input type="text" id="projectName" />
-      </label>
-      <label>Location
-        <input type="text" id="location" />
-      </label>
-      <label>Date
-        <input type="date" id="date" />
-      </label>
-      <label>Supervisor
-        <input type="text" id="supervisor" />
-      </label>
-    </fieldset>
+    <div class="photo-block">
+      <div class="photo-block-title">Photo 2</div>
+      <label>Image <input type="file" id="photo2" accept="image/*" /></label>
+      <label>Description (required if photo is added) <textarea id="photoDesc2"></textarea></label>
+    </div>
 
-    <fieldset>
-      <legend>Job Description</legend>
-      <label>Short Description
-        <textarea id="shortDescription" placeholder="Basic outline of the day's work according to the briefing."></textarea>
-      </label>
+    <div class="photo-block">
+      <div class="photo-block-title">Photo 3</div>
+      <label>Image <input type="file" id="photo3" accept="image/*" /></label>
+      <label>Description (required if photo is added) <textarea id="photoDesc3"></textarea></label>
+    </div>
 
-      <label>Today's Objectives</label>
-      <div class="numbered-list">
-        <div class="numbered-row">
-          <span>1.</span><input type="text" id="objective1" />
-        </div>
-        <div class="numbered-row">
-          <span>2.</span><input type="text" id="objective2" />
-        </div>
-        <div class="numbered-row">
-          <span>3.</span><input type="text" id="objective3" />
-        </div>
-        <div class="numbered-row">
-          <span>4.</span><input type="text" id="objective4" />
-        </div>
-        <div class="numbered-row">
-          <span>5.</span><input type="text" id="objective5" />
-        </div>
-        <div class="numbered-row">
-          <span>6.</span><input type="text" id="objective6" />
-        </div>
-      </div>
+    <div class="photo-block">
+      <div class="photo-block-title">Photo 4</div>
+      <label>Image <input type="file" id="photo4" accept="image/*" /></label>
+      <label>Description (required if photo is added) <textarea id="photoDesc4"></textarea></label>
+    </div>
 
-      <label>Potential Issues</label>
-      <div class="numbered-list">
-        <div class="numbered-row">
-          <span>1.</span><input type="text" id="potentialIssue1" />
-        </div>
-        <div class="numbered-row">
-          <span>2.</span><input type="text" id="potentialIssue2" />
-        </div>
-        <div class="numbered-row">
-          <span>3.</span><input type="text" id="potentialIssue3" />
-        </div>
-        <div class="numbered-row">
-          <span>4.</span><input type="text" id="potentialIssue4" />
-        </div>
-        <div class="numbered-row">
-          <span>5.</span><input type="text" id="potentialIssue5" />
-        </div>
-        <div class="numbered-row">
-          <span>6.</span><input type="text" id="potentialIssue6" />
-        </div>
-      </div>
-    </fieldset>
+    <div class="photo-block">
+      <div class="photo-block-title">Photo 5</div>
+      <label>Image <input type="file" id="photo5" accept="image/*" /></label>
+      <label>Description (required if photo is added) <textarea id="photoDesc5"></textarea></label>
+    </div>
 
-    <fieldset>
-      <legend>Safety Report – Take 5</legend>
-      <p class="small-note">
-        Complete before work commences and if conditions change.
-      </p>
+    <div class="photo-block">
+      <div class="photo-block-title">Photo 6</div>
+      <label>Image <input type="file" id="photo6" accept="image/*" /></label>
+      <label>Description (required if photo is added) <textarea id="photoDesc6"></textarea></label>
+    </div>
 
-      <table id="safetyTable">
-        <thead>
-          <tr>
-            <th>Safety Check</th>
-            <th>Yes</th>
-            <th>No</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1. Do I have the correct PPE for today’s tasks and site conditions?</td>
-            <td><input type="radio" name="safety1" value="Yes"></td>
-            <td><input type="radio" name="safety1" value="No"></td>
-          </tr>
-          <tr>
-            <td>2. Is all PPE, tools and equipment in safe working condition?</td>
-            <td><input type="radio" name="safety2" value="Yes"></td>
-            <td><input type="radio" name="safety2" value="No"></td>
-          </tr>
-          <tr>
-            <td>3. Do I have the correct tools and equipment to complete today’s tasks safely?</td>
-            <td><input type="radio" name="safety3" value="Yes"></td>
-            <td><input type="radio" name="safety3" value="No"></td>
-          </tr>
-          <tr>
-            <td>4. Am I clear on today’s scope of works and work areas?</td>
-            <td><input type="radio" name="safety4" value="Yes"></td>
-            <td><input type="radio" name="safety4" value="No"></td>
-          </tr>
-          <tr>
-            <td>5. Have I reviewed and understood the applicable SWMS / JSA and site rules?</td>
-            <td><input type="radio" name="safety5" value="Yes"></td>
-            <td><input type="radio" name="safety5" value="No"></td>
-          </tr>
-          <tr>
-            <td>6. Do I have the required training and competency for today’s tasks?</td>
-            <td><input type="radio" name="safety6" value="Yes"></td>
-            <td><input type="radio" name="safety6" value="No"></td>
-          </tr>
-          <tr>
-            <td>7. Am I fit for work today (not fatigued and free from drugs/alcohol)?</td>
-            <td><input type="radio" name="safety7" value="Yes"></td>
-            <td><input type="radio" name="safety7" value="No"></td>
-          </tr>
-          <tr>
-            <td>8. Am I well enough to work safely today?</td>
-            <td><input type="radio" name="safety8" value="Yes"></td>
-            <td><input type="radio" name="safety8" value="No"></td>
-          </tr>
-          <tr>
-            <td>9. Do I have sufficient water, food and rest breaks planned?</td>
-            <td><input type="radio" name="safety9" value="Yes"></td>
-            <td><input type="radio" name="safety9" value="No"></td>
-          </tr>
-          <tr>
-            <td>10. Have I checked the work area for slip, trip and fall hazards?</td>
-            <td><input type="radio" name="safety10" value="Yes"></td>
-            <td><input type="radio" name="safety10" value="No"></td>
-          </tr>
-          <tr>
-            <td>11. Are environmental and heritage controls understood and in place?</td>
-            <td><input type="radio" name="safety11" value="Yes"></td>
-            <td><input type="radio" name="safety11" value="No"></td>
-          </tr>
-          <tr>
-            <td>12. Are weather conditions suitable and controls applied?</td>
-            <td><input type="radio" name="safety12" value="Yes"></td>
-            <td><input type="radio" name="safety12" value="No"></td>
-          </tr>
-          <tr>
-            <td>13. Are controls in place for vehicle, plant and contractor interaction?</td>
-            <td><input type="radio" name="safety13" value="Yes"></td>
-            <td><input type="radio" name="safety13" value="No"></td>
-          </tr>
-          <tr>
-            <td>14. Do I know who the site supervisor / safety contact is?</td>
-            <td><input type="radio" name="safety14" value="Yes"></td>
-            <td><input type="radio" name="safety14" value="No"></td>
-          </tr>
-          <tr>
-            <td>15. Do I know the site emergency procedures and muster point?</td>
-            <td><input type="radio" name="safety15" value="Yes"></td>
-            <td><input type="radio" name="safety15" value="No"></td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Added photos 7–10 -->
+    <div class="photo-block">
+      <div class="photo-block-title">Photo 7</div>
+      <label>Image <input type="file" id="photo7" accept="image/*" /></label>
+      <label>Description (required if photo is added) <textarea id="photoDesc7"></textarea></label>
+    </div>
 
-      <label style="margin-top:10px;">Additional Safety Notes
-        <textarea id="safetyNotes" placeholder="Record hazards, controls or actions required if any answer is ‘No’."></textarea>
-      </label>
-    </fieldset>
+    <div class="photo-block">
+      <div class="photo-block-title">Photo 8</div>
+      <label>Image <input type="file" id="photo8" accept="image/*" /></label>
+      <label>Description (required if photo is added) <textarea id="photoDesc8"></textarea></label>
+    </div>
 
-    <fieldset>
-      <legend>Quantities & Outputs</legend>
-      <p class="small-note">
-        Use this table for plants, jute, mulch, pins, etc. Fill as many rows as you need.
-      </p>
-      <table id="qtyTable">
-        <thead>
-          <tr>
-            <th style="width: 25%;">Unit Type</th>
-            <th style="width: 15%;">Amount</th>
-            <th>Conditions / Reasons</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- 10 rows -->
-          <tr>
-            <td><input type="text" class="qty-unit" placeholder="e.g. Trees, Jute, Pins" /></td>
-            <td><input type="text" class="qty-amount" placeholder="e.g. 3,500" /></td>
-            <td><textarea class="qty-conditions" placeholder="e.g. Area A only, compacted batter, etc."></textarea></td>
-          </tr>
-          <tr>
-            <td><input type="text" class="qty-unit" /></td>
-            <td><input type="text" class="qty-amount" /></td>
-            <td><textarea class="qty-conditions"></textarea></td>
-          </tr>
-          <tr>
-            <td><input type="text" class="qty-unit" /></td>
-            <td><input type="text" class="qty-amount" /></td>
-            <td><textarea class="qty-conditions"></textarea></td>
-          </tr>
-          <tr>
-            <td><input type="text" class="qty-unit" /></td>
-            <td><input type="text" class="qty-amount" /></td>
-            <td><textarea class="qty-conditions"></textarea></td>
-          </tr>
-          <tr>
-            <td><input type="text" class="qty-unit" /></td>
-            <td><input type="text" class="qty-amount" /></td>
-            <td><textarea class="qty-conditions"></textarea></td>
-          </tr>
-          <tr>
-            <td><input type="text" class="qty-unit" /></td>
-            <td><input type="text" class="qty-amount" /></td>
-            <td><textarea class="qty-conditions"></textarea></td>
-          </tr>
-          <tr>
-            <td><input type="text" class="qty-unit" /></td>
-            <td><input type="text" class="qty-amount" /></td>
-            <td><textarea class="qty-conditions"></textarea></td>
-          </tr>
-          <tr>
-            <td><input type="text" class="qty-unit" /></td>
-            <td><input type="text" class="qty-amount" /></td>
-            <td><textarea class="qty-conditions"></textarea></td>
-          </tr>
-          <tr>
-            <td><input type="text" class="qty-unit" /></td>
-            <td><input type="text" class="qty-amount" /></td>
-            <td><textarea class="qty-conditions"></textarea></td>
-          </tr>
-          <tr>
-            <td><input type="text" class="qty-unit" /></td>
-            <td><input type="text" class="qty-amount" /></td>
-            <td><textarea class="qty-conditions"></textarea></td>
-          </tr>
-        </tbody>
-      </table>
-    </fieldset>
+    <div class="photo-block">
+      <div class="photo-block-title">Photo 9</div>
+      <label>Image <input type="file" id="photo9" accept="image/*" /></label>
+      <label>Description (required if photo is added) <textarea id="photoDesc9"></textarea></label>
+    </div>
 
-    <fieldset>
-      <legend>Work Summary</legend>
+    <div class="photo-block">
+      <div class="photo-block-title">Photo 10</div>
+      <label>Image <input type="file" id="photo10" accept="image/*" /></label>
+      <label>Description (required if photo is added) <textarea id="photoDesc10"></textarea></label>
+    </div>
+  </fieldset>
 
-      <label>Start Time
-        <input type="time" id="startTime" />
-      </label>
+  <button type="button" id="generateBtn">Generate PDF</button>
+</form>
 
-      <label>Finish Time
-        <input type="time" id="finishTime" />
-      </label>
+<!-- jsPDF from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-      <label>What works were completed today?
-        <textarea id="worksCompletedToday" placeholder="Briefly describe the main tasks completed on site today."></textarea>
-      </label>
+<script>
+// ---------- Helpers ----------
+function readFileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
-      <label>Challenges &amp; Solutions</label>
-      <table id="challengeTable">
-        <thead>
-          <tr>
-            <th style="width: 50%;">Challenges</th>
-            <th>Solutions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- 5 rows -->
-          <tr>
-            <td><textarea class="challenge-text"></textarea></td>
-            <td><textarea class="solution-text"></textarea></td>
-          </tr>
-          <tr>
-            <td><textarea class="challenge-text"></textarea></td>
-            <td><textarea class="solution-text"></textarea></td>
-          </tr>
-          <tr>
-            <td><textarea class="challenge-text"></textarea></td>
-            <td><textarea class="solution-text"></textarea></td>
-          </tr>
-          <tr>
-            <td><textarea class="challenge-text"></textarea></td>
-            <td><textarea class="solution-text"></textarea></td>
-          </tr>
-          <tr>
-            <td><textarea class="challenge-text"></textarea></td>
-            <td><textarea class="solution-text"></textarea></td>
-          </tr>
-        </tbody>
-      </table>
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
 
-      <label>Notes for Client
-        <textarea id="notesForClient" placeholder="Any additional notes or observations relevant to the client."></textarea>
-      </label>
-    </fieldset>
+async function processImageToPortrait(file) {
+  const dataUrl = await readFileAsDataURL(file);
+  const img = await loadImage(dataUrl);
 
-    <fieldset>
-      <legend>Work Photos</legend>
-      <p class="small-note">
-        Upload up to six key photos from the day.<br>
-        Each photo must have a description explaining what we’re looking at.
-      </p>
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
 
-      <div class="photo-block">
-        <div class="photo-block-title">Photo 1</div>
-        <label>Image
-          <input type="file" id="photo1" accept="image/*" />
-        </label>
-        <label>Description (required if photo is added)
-          <textarea id="photoDesc1" placeholder="e.g. Overview of Area A batter after jute install."></textarea>
-        </label>
-      </div>
+  if (img.width > img.height) {
+    canvas.width = img.height;
+    canvas.height = img.width;
+    ctx.translate(0, canvas.height);
+    ctx.rotate(-Math.PI / 2);
+    ctx.drawImage(img, 0, 0);
+  } else {
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+  }
 
-      <div class="photo-block">
-        <div class="photo-block-title">Photo 2</div>
-        <label>Image
-          <input type="file" id="photo2" accept="image/*" />
-        </label>
-        <label>Description (required if photo is added)
-          <textarea id="photoDesc2"></textarea>
-        </label>
-      </div>
+  const portraitDataUrl = canvas.toDataURL("image/jpeg");
+  return {
+    url: portraitDataUrl,
+    type: "image/jpeg",
+    width: canvas.width,
+    height: canvas.height
+  };
+}
 
-      <div class="photo-block">
-        <div class="photo-block-title">Photo 3</div>
-        <label>Image
-          <input type="file" id="photo3" accept="image/*" />
-        </label>
-        <label>Description (required if photo is added)
-          <textarea id="photoDesc3"></textarea>
-        </label>
-      </div>
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("generateBtn");
 
-      <div class="photo-block">
-        <div class="photo-block-title">Photo 4</div>
-        <label>Image
-          <input type="file" id="photo4" accept="image/*" />
-        </label>
-        <label>Description (required if photo is added)
-          <textarea id="photoDesc4"></textarea>
-        </label>
-      </div>
+  btn.addEventListener("click", async () => {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      alert("PDF library failed to load. Please check your internet connection and reload this page.");
+      console.error("window.jspdf is", window.jspdf);
+      return;
+    }
+    const { jsPDF } = window.jspdf;
 
-      <div class="photo-block">
-        <div class="photo-block-title">Photo 5</div>
-        <label>Image
-          <input type="file" id="photo5" accept="image/*" />
-        </label>
-        <label>Description (required if photo is added)
-          <textarea id="photoDesc5"></textarea>
-        </label>
-      </div>
-
-      <div class="photo-block">
-        <div class="photo-block-title">Photo 6</div>
-        <label>Image
-          <input type="file" id="photo6" accept="image/*" />
-        </label>
-        <label>Description (required if photo is added)
-          <textarea id="photoDesc6"></textarea>
-        </label>
-      </div>
-    </fieldset>
-
-    <button type="button" id="generateBtn">Generate PDF</button>
-  </form>
-
-  <!-- jsPDF from CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <script>
-    // ---------- Helpers ----------
-    function readFileAsDataURL(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+    const logoFile = document.getElementById("logoInput").files[0];
+    if (!logoFile) {
+      alert("Please select a logo file at the top of the form.");
+      return;
     }
 
-    function loadImage(src) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = src;
-      });
-    }
+    btn.disabled = true;
+    btn.textContent = "Generating...";
 
-    async function processImageToPortrait(file) {
-      const dataUrl = await readFileAsDataURL(file);
-      const img = await loadImage(dataUrl);
+    try {
+      // ---- Read form values ----
+      const clientName       = document.getElementById("clientName").value || "";
+      const projectName      = document.getElementById("projectName").value || "";
+      const location         = document.getElementById("location").value || "";
 
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-
-      if (img.width > img.height) {
-        canvas.width = img.height;
-        canvas.height = img.width;
-        ctx.translate(0, canvas.height);
-        ctx.rotate(-Math.PI / 2);
-        ctx.drawImage(img, 0, 0);
+      const rawDate          = document.getElementById("date").value || "";
+      let displayDate = "";
+      let fileDate = "";
+      if (rawDate) {
+        const parts = rawDate.split("-");
+        if (parts.length === 3) {
+          const [y, m, d] = parts;
+          displayDate = `${d}/${m}/${y}`;
+          fileDate = `${d}-${m}-${y}`;
+        } else {
+          displayDate = rawDate;
+          fileDate = rawDate;
+        }
       } else {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
+        const now = new Date();
+        const dd = String(now.getDate()).padStart(2,"0");
+        const mm = String(now.getMonth()+1).padStart(2,"0");
+        const yy = now.getFullYear();
+        displayDate = `${dd}/${mm}/${yy}`;
+        fileDate = `${dd}-${mm}-${yy}`;
       }
 
-      const portraitDataUrl = canvas.toDataURL("image/jpeg");
-      return {
-        url: portraitDataUrl,
-        type: "image/jpeg",
-        width: canvas.width,
-        height: canvas.height
-      };
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const btn = document.getElementById("generateBtn");
-
-      btn.addEventListener("click", async () => {
-        if (!window.jspdf || !window.jspdf.jsPDF) {
-          alert("PDF library failed to load. Please check your internet connection and reload this page.");
-          console.error("window.jspdf is", window.jspdf);
-          return;
-        }
-        const { jsPDF } = window.jspdf;
-
-        const logoFile = document.getElementById("logoInput").files[0];
-        if (!logoFile) {
-          alert("Please select a logo file at the top of the form.");
-          return;
-        }
-
-        btn.disabled = true;
-        btn.textContent = "Generating...";
-
-        try {
-          // ---- Read form values ----
-          const clientName       = document.getElementById("clientName").value || "";
-          const projectName      = document.getElementById("projectName").value || "";
-          const location         = document.getElementById("location").value || "";
-
-          const rawDate          = document.getElementById("date").value || "";
-          let displayDate = "";
-          let fileDate = "";
-          if (rawDate) {
-            const parts = rawDate.split("-");
-            if (parts.length === 3) {
-              const [y, m, d] = parts;
-              displayDate = `${d}/${m}/${y}`;
-              fileDate = `${d}-${m}-${y}`;
-            } else {
-              displayDate = rawDate;
-              fileDate = rawDate;
-            }
-          } else {
-            const now = new Date();
-            const dd = String(now.getDate()).padStart(2,"0");
-            const mm = String(now.getMonth()+1).padStart(2,"0");
-            const yy = now.getFullYear();
-            displayDate = `${dd}/${mm}/${yy}`;
-            fileDate = `${dd}-${mm}-${yy}`;
-          }
-
-          const supervisor       = document.getElementById("supervisor").value || "";
-
-          const shortDescription = document.getElementById("shortDescription").value || "";
-
-          const objectives = [];
-          for (let i = 1; i <= 6; i++) {
-            objectives.push(document.getElementById(`objective${i}`).value || "");
-          }
-
-          const potentialIssuesList = [];
-          for (let i = 1; i <= 6; i++) {
-            potentialIssuesList.push(document.getElementById(`potentialIssue${i}`).value || "");
-          }
-
-          // ---- Safety Report ----
-          const safetyResponses = [];
-          document.querySelectorAll("#safetyTable tbody tr").forEach(row => {
-            const questionCell = row.querySelector("td");
-            const question = questionCell ? questionCell.innerText.trim() : "";
-            const yes = row.querySelector('input[type="radio"][value="Yes"]:checked');
-            const no  = row.querySelector('input[type="radio"][value="No"]:checked');
-            let answer = "-";
-            if (yes) answer = "Yes";
-            else if (no) answer = "No";
-            safetyResponses.push({ question, answer });
-          });
-          const safetyNotes = document.getElementById("safetyNotes").value || "";
-
-          const startTime  = document.getElementById("startTime").value || "";
-          const finishTime = document.getElementById("finishTime").value || "";
-
-          const worksCompletedToday = document.getElementById("worksCompletedToday").value || "";
-          const notesForClient      = document.getElementById("notesForClient").value || "";
-
-          // Challenges & Solutions rows
-          const challengeRows = [];
-          document.querySelectorAll("#challengeTable tbody tr").forEach(row => {
-            const challenge = row.querySelector(".challenge-text").value.trim();
-            const solution  = row.querySelector(".solution-text").value.trim();
-            if (challenge || solution) {
-              challengeRows.push({ challenge, solution });
-            }
-          });
-
-          // Quantities rows
-          const qtyRows = [];
-          document.querySelectorAll("#qtyTable tbody tr").forEach(row => {
-            const unit = row.querySelector(".qty-unit").value.trim();
-            const amount = row.querySelector(".qty-amount").value.trim();
-            const cond = row.querySelector(".qty-conditions").value.trim();
-            if (unit || amount || cond) {
-              qtyRows.push({ unit, amount, cond });
-            }
-          });
-
-          // Photos (6 slots)
-          const photoSlots = [];
-          for (let i = 1; i <= 6; i++) {
-            const fileInput = document.getElementById(`photo${i}`);
-            const descInput = document.getElementById(`photoDesc${i}`);
-            const file = fileInput.files[0];
-            const desc = (descInput.value || "").trim();
-
-            if (file) {
-              if (!desc) {
-                alert(`Please add a description for Photo ${i}.`);
-                btn.disabled = false;
-                btn.textContent = "Generate PDF";
-                return;
-              }
-              photoSlots.push({ file, desc });
-            }
-          }
-
-          // ---- Setup PDF ----
-          const doc    = new jsPDF({ unit: "mm", format: "a4" });
-          const margin = 15;
-          const pageWidth  = doc.internal.pageSize.getWidth();
-          const pageHeight = doc.internal.pageSize.getHeight();
-          let y = margin;
-
-          // Font sizes
-          const FONT_TITLE   = 14;
-          const FONT_SECTION = 11;
-          const FONT_BODY    = 9;
-          const FONT_LABEL   = 9;
-          const FONT_TABLE   = 8;
-          const FONT_FOOTER  = 8;
-          const LINE_HEIGHT_BODY  = 4;
-          const LINE_HEIGHT_TABLE = 4;
-
-          function ensureSpace(extraHeight = 20) {
-            if (y + extraHeight > pageHeight - 15) {
-              doc.addPage();
-              y = margin;
-            }
-          }
-
-          function addSectionTitle(title) {
-            y += 5;
-            ensureSpace(12);
-            doc.setFont("courier", "bold");
-            doc.setFontSize(FONT_SECTION);
-            doc.text(title, margin, y);
-            y += 6;
-          }
-
-          function addLabeledBox(label, value) {
-            const width = pageWidth - 2 * margin;
-            const text = (value && value.trim()) ? value : "-";
-
-            doc.setFont("courier", "normal");
-            doc.setFontSize(FONT_BODY);
-
-            const innerWidth = width - 8;
-            const lines = doc.splitTextToSize(text, innerWidth);
-            const lineHeight = LINE_HEIGHT_BODY;
-
-            const minBoxHeight = 14;
-            const contentHeight = lines.length * lineHeight;
-            const boxHeight = Math.max(minBoxHeight, contentHeight + 6);
-
-            ensureSpace(boxHeight + 10);
-
-            doc.setFont("courier", "bold");
-            doc.setFontSize(FONT_LABEL);
-            doc.text(label, margin, y);
-            y += 3.5;
-
-            const boxY = y;
-            doc.setDrawColor(200, 200, 200);
-            doc.setFillColor(250, 250, 250);
-            doc.roundedRect(margin, boxY, width, boxHeight, 2, 2, "FD");
-
-            const textBlockHeight = lines.length * lineHeight;
-            const verticalPadding = (boxHeight - textBlockHeight) / 2;
-
-            doc.setFont("courier", "normal");
-            doc.setFontSize(FONT_BODY);
-            doc.text(lines, margin + 4, boxY + verticalPadding + lineHeight * 0.75);
-
-            y += boxHeight + 5;
-
-            doc.setDrawColor(0, 0, 0);
-            doc.setFillColor(255, 255, 255);
-          }
-
-          // Numbered list that only shows filled rows
-          function addNumberedList(label, valuesArray) {
-            const filtered = valuesArray
-              .map(v => (v || "").trim())
-              .filter(v => v.length > 0);
-
-            if (filtered.length === 0) return;
-
-            const width = pageWidth - 2 * margin;
-            const rowHeight = 5;
-            const boxHeight = filtered.length * rowHeight + 6;
-
-            ensureSpace(boxHeight + 10);
-
-            doc.setFont("courier", "bold");
-            doc.setFontSize(FONT_LABEL);
-            doc.text(label, margin, y);
-            y += 3.5;
-
-            const boxY = y;
-            doc.setDrawColor(200, 200, 200);
-            doc.setFillColor(250, 250, 250);
-            doc.roundedRect(margin, boxY, width, boxHeight, 2, 2, "FD");
-
-            doc.setFont("courier", "normal");
-            doc.setFontSize(FONT_BODY);
-
-            let lineY = boxY + 7;
-            filtered.forEach((text, index) => {
-              doc.text(`${index + 1}.`, margin + 4, lineY);
-              doc.text(text, margin + 14, lineY);
-              lineY += rowHeight;
-            });
-
-            y += boxHeight + 5;
-
-            doc.setDrawColor(0, 0, 0);
-            doc.setFillColor(255, 255, 255);
-          }
-
-          function addSafetySection(safetyResponses, safetyNotes) {
-            addSectionTitle("Safety Report – Take 5");
-
-            const colYesWidth = 8;
-            const colNoWidth  = 8;
-            const colQWidth   = pageWidth - 2 * margin - colYesWidth - colNoWidth;
-
-            const colYesX = margin;
-            const colNoX  = margin + colYesWidth;
-            const colQX   = margin + colYesWidth + colNoWidth;
-
-            const headerHeight = 6;
-            ensureSpace(headerHeight + 4);
-
-            const totalWidth = colYesWidth + colNoWidth + colQWidth;
-
-            // Header row with green fill and straight corners
-            doc.setDrawColor(180, 180, 180);
-            doc.setFillColor(230, 242, 236);
-            doc.rect(colYesX, y, totalWidth, headerHeight, "FD");
-
-            doc.setDrawColor(180, 180, 180);
-            doc.line(colNoX, y, colNoX, y + headerHeight);
-            doc.line(colQX,  y, colQX,  y + headerHeight);
-
-            doc.setFont("courier", "bold");
-            doc.setFontSize(FONT_TABLE);
-            doc.setTextColor(0, 0, 0);
-            const headerCenterY = y + headerHeight / 2 + 1;
-            doc.text("Yes", colYesX + 2, headerCenterY);
-            doc.text("No",  colNoX  + 2, headerCenterY);
-            doc.text("Question", colQX + 2, headerCenterY);
-
-            y += headerHeight;
-
-            // Body rows with straight-corner cells
-            doc.setFont("courier", "normal");
-            doc.setFontSize(FONT_TABLE);
-            doc.setDrawColor(200, 200, 200);
-            doc.setFillColor(255, 255, 255);
-
-            safetyResponses.forEach((item) => {
-              const qText = item.question || "";
-              const qLines = doc.splitTextToSize(qText, colQWidth - 4);
-              const lineCount = Math.max(1, qLines.length);
-              const rowHeight = lineCount * LINE_HEIGHT_TABLE + 2;
-
-              ensureSpace(rowHeight + 2);
-
-              doc.rect(colYesX, y, colYesWidth, rowHeight);
-              doc.rect(colNoX,  y, colNoWidth,  rowHeight);
-              doc.rect(colQX,   y, colQWidth,   rowHeight);
-
-              const boxSize = 3.5;
-              const yesBoxX = colYesX + (colYesWidth - boxSize) / 2;
-              const noBoxX  = colNoX  + (colNoWidth  - boxSize) / 2;
-              const boxY    = y + (rowHeight - boxSize) / 2;
-
-              doc.rect(yesBoxX, boxY, boxSize, boxSize);
-              doc.rect(noBoxX,  boxY, boxSize, boxSize);
-
-              if (item.answer === "Yes") {
-                doc.text("X", yesBoxX + 1, boxY + boxSize - 0.5);
-              } else if (item.answer === "No") {
-                doc.text("X", noBoxX + 1, boxY + boxSize - 0.5);
-              }
-
-              const lineCountEff = Math.max(1, qLines.length);
-              const textBlockHeight = lineCountEff * LINE_HEIGHT_TABLE;
-              const baseY = y + (rowHeight - textBlockHeight) / 2 + LINE_HEIGHT_TABLE * 0.75;
-
-              doc.text(qLines, colQX + 2, baseY);
-
-              y += rowHeight;
-            });
-
-            // Extra gap before Additional Safety Notes
-            y += 7;
-
-            addLabeledBox("Additional Safety Notes", safetyNotes);
-          }
-
-          // ---- Logo ----
-          const logoDataUrl = await readFileAsDataURL(logoFile);
-          const logoImg = await loadImage(logoDataUrl);
-          const maxLogoWidth = 80;
-          const aspect = logoImg.height / logoImg.width;
-          const logoWidth = Math.min(maxLogoWidth, pageWidth - 2 * margin);
-          const logoHeight = logoWidth * aspect;
-          const logoX = (pageWidth - logoWidth) / 2;
-          const logoFormat = logoFile.type === "image/png" ? "PNG" : "JPEG";
-          doc.addImage(logoDataUrl, logoFormat, logoX, y, logoWidth, logoHeight);
-          y += logoHeight + 8;
-
-          // Title
-          doc.setFont("courier", "bold");
-          doc.setFontSize(FONT_TITLE);
-          doc.text("Daily Site Report", pageWidth / 2, y, { align: "center" });
-          y += 8;
-
-          // ---- Job Details (Page 1) ----
-          addSectionTitle("Job Details");
-          addLabeledBox("Client Name",         clientName);
-          addLabeledBox("Project / Site Name", projectName);
-          addLabeledBox("Location",            location);
-          addLabeledBox("Date",                displayDate);
-          addLabeledBox("Supervisor",          supervisor);
-
-          // ---- Job Description (Page 1) ----
-          addSectionTitle("Job Description");
-          addLabeledBox("Short Description", shortDescription);
-          addNumberedList("Today's Objectives", objectives);
-          addNumberedList("Potential Issues",  potentialIssuesList);
-
-          // ---- Safety ----
-          addSafetySection(safetyResponses, safetyNotes);
-
-          // ---- PAGE 2+: Quantities & Outputs + Work Summary ----
-          doc.addPage();
-          y = margin;
-
-          // ---- Quantities & Outputs ----
-          if (qtyRows.length > 0) {
-            addSectionTitle("Quantities & Outputs");
-
-            const col1Width = 50;
-            const col2Width = 25;
-            const col3Width = pageWidth - margin - (margin + col1Width + col2Width);
-
-            const col1X = margin;
-            const col2X = margin + col1Width;
-            const col3X = margin + col1Width + col2Width;
-
-            const headerHeight = 7;
-            ensureSpace(headerHeight + 4);
-
-            const totalWidthQ = col1Width + col2Width + col3Width;
-
-            // Header with green fill, straight corners
-            doc.setFont("courier", "bold");
-            doc.setFontSize(FONT_TABLE);
-            doc.setDrawColor(180, 180, 180);
-            doc.setFillColor(230, 242, 236);
-            doc.rect(col1X, y, totalWidthQ, headerHeight, "FD");
-            doc.setDrawColor(180, 180, 180);
-            doc.line(col2X, y, col2X, y + headerHeight);
-            doc.line(col3X, y, col3X, y + headerHeight);
-
-            const headerCenterYQ = y + headerHeight / 2 + 1;
-            doc.setTextColor(0, 0, 0);
-            doc.text("Unit Type", col1X + 2, headerCenterYQ);
-            doc.text("Amount",    col2X + 2, headerCenterYQ);
-            doc.text("Conditions / Reasons", col3X + 2, headerCenterYQ);
-
-            y += headerHeight;
-
-            doc.setFont("courier", "normal");
-            doc.setFontSize(FONT_TABLE);
-            doc.setDrawColor(200, 200, 200);
-            doc.setFillColor(255, 255, 255);
-
-            qtyRows.forEach(row => {
-              const unitText   = row.unit || "-";
-              const amountText = row.amount || "-";
-              const condText   = row.cond || "-";
-
-              const unitLines   = doc.splitTextToSize(unitText,   col1Width - 4);
-              const amountLines = doc.splitTextToSize(amountText, col2Width - 4);
-              const condLines   = doc.splitTextToSize(condText,   col3Width - 4);
-
-              const lineCount = Math.max(unitLines.length, amountLines.length, condLines.length);
-              const rowHeight = lineCount * LINE_HEIGHT_TABLE + 2;
-
-              ensureSpace(rowHeight + 2);
-
-              doc.rect(col1X, y, col1Width, rowHeight);
-              doc.rect(col2X, y, col2Width, rowHeight);
-              doc.rect(col3X, y, col3Width, rowHeight);
-
-              const unitBlockHeight   = unitLines.length   * LINE_HEIGHT_TABLE;
-              const amountBlockHeight = amountLines.length * LINE_HEIGHT_TABLE;
-              const condBlockHeight   = condLines.length   * LINE_HEIGHT_TABLE;
-
-              const unitBaseY   = y + (rowHeight - unitBlockHeight)   / 2 + LINE_HEIGHT_TABLE * 0.75;
-              const amountBaseY = y + (rowHeight - amountBlockHeight) / 2 + LINE_HEIGHT_TABLE * 0.75;
-              const condBaseY   = y + (rowHeight - condBlockHeight)   / 2 + LINE_HEIGHT_TABLE * 0.75;
-
-              doc.text(unitLines,   col1X + 2, unitBaseY);
-              doc.text(amountLines, col2X + 2, amountBaseY);
-              doc.text(condLines,   col3X + 2, condBaseY);
-
-              y += rowHeight;
-            });
-
-            y += 3;
-          }
-
-          // ---- Work Summary ----
-          addSectionTitle("Work Summary");
-          addLabeledBox("Start Time", startTime);
-          addLabeledBox("Finish Time", finishTime);
-          addLabeledBox("What works were completed today?", worksCompletedToday);
-
-          if (challengeRows.length > 0) {
-            ensureSpace(10);
-            doc.setFont("courier", "bold");
-            doc.setFontSize(FONT_TABLE);
-            doc.text("Challenges & Solutions", margin, y);
-            y += 4.5;
-
-            const tableWidth = pageWidth - 2 * margin;
-            const col1Width = tableWidth * 0.5;
-            const col2Width = tableWidth - col1Width;
-
-            const col1X = margin;
-            const col2X = margin + col1Width;
-
-            const headerHeight = 7;
-            ensureSpace(headerHeight + 4);
-
-            // Header with green fill
-            doc.setDrawColor(180, 180, 180);
-            doc.setFillColor(230, 242, 236);
-            doc.rect(col1X, y, tableWidth, headerHeight, "FD");
-            doc.setDrawColor(180, 180, 180);
-            doc.line(col2X, y, col2X, y + headerHeight);
-
-            const headerCenterY = y + headerHeight / 2 + 1;
-            doc.text("Challenges", col1X + 2, headerCenterY);
-            doc.text("Solutions",  col2X + 2, headerCenterY);
-
-            y += headerHeight;
-
-            doc.setFont("courier", "normal");
-            doc.setFontSize(FONT_TABLE);
-            doc.setDrawColor(200, 200, 200);
-            doc.setFillColor(255, 255, 255);
-
-            challengeRows.forEach(row => {
-              const chText = row.challenge || "-";
-              const solText = row.solution || "-";
-
-              const chLines  = doc.splitTextToSize(chText,  col1Width - 4);
-              const solLines = doc.splitTextToSize(solText, col2Width - 4);
-
-              const lineCount = Math.max(chLines.length, solLines.length);
-              const rowHeight = lineCount * LINE_HEIGHT_TABLE + 2;
-
-              ensureSpace(rowHeight + 2);
-
-              doc.rect(col1X, y, col1Width, rowHeight);
-              doc.rect(col2X, y, col2Width, rowHeight);
-
-              const chBlockHeight  = chLines.length * LINE_HEIGHT_TABLE;
-              const solBlockHeight = solLines.length * LINE_HEIGHT_TABLE;
-              const chBaseY  = y + (rowHeight - chBlockHeight)  / 2 + LINE_HEIGHT_TABLE * 0.75;
-              const solBaseY = y + (rowHeight - solBlockHeight) / 2 + LINE_HEIGHT_TABLE * 0.75;
-
-              doc.text(chLines,  col1X + 2, chBaseY);
-              doc.text(solLines, col2X + 2, solBaseY);
-
-              y += rowHeight;
-            });
-
-            // Extra gap before Notes for Client
-            y += 7;
-          }
-
-          addLabeledBox("Notes for Client", notesForClient);
-
-          // ---- Work Photos page ----
-          if (photoSlots.length > 0) {
-            const images = [];
-            for (const slot of photoSlots) {
-              try {
-                const img = await processImageToPortrait(slot.file);
-                images.push({
-                  url: img.url,
-                  type: img.type,
-                  width: img.width,
-                  height: img.height,
-                  caption: slot.desc
-                });
-              } catch (e) {
-                console.error("Failed to process image", slot.file.name, e);
-              }
-            }
-
-            if (images.length > 0) {
-              doc.addPage();
-              const pW = doc.internal.pageSize.getWidth();
-              const pH = doc.internal.pageSize.getHeight();
-
-              const photosMargin  = margin;
-              let yPhotos = photosMargin;
-
-              doc.setFont("courier", "bold");
-              doc.setFontSize(FONT_SECTION);
-              doc.text("Work Photos", photosMargin, yPhotos);
-              yPhotos += 5;
-
-              const topY           = yPhotos;
-              const availableWidth = pW - 2 * photosMargin;
-              const availableHeight= pH - topY - photosMargin;
-
-              const n = images.length;
-              const cols = n === 1 ? 1 : 2;
-              const rows = Math.ceil(n / cols);
-
-              const cellPad    = 2;
-              const cellWidth  = availableWidth / cols;
-              const cellHeight = availableHeight / rows;
-
-              images.forEach((img, index) => {
-                try {
-                  const colIndex = index % cols;
-                  const rowIndex = Math.floor(index / cols);
-
-                  const cellX = photosMargin + colIndex * cellWidth;
-                  const cellY = topY + rowIndex * cellHeight;
-
-                  const iw = img.width;
-                  const ih = img.height;
-
-                  const scale = Math.min(
-                    (cellWidth  - 2 * cellPad) / iw,
-                    (cellHeight - 2 * cellPad - 10) / ih
-                  );
-
-                  const drawW = iw * scale;
-                  const drawH = ih * scale;
-
-                  const x   = cellX + (cellWidth  - drawW)  / 2;
-                  const yIm = cellY + 4;
-
-                  let format = "JPEG";
-                  if (img.type === "image/png") format = "PNG";
-
-                  doc.setDrawColor(200, 200, 200);
-                  doc.rect(cellX, cellY, cellWidth, cellHeight);
-                  doc.addImage(img.url, format, x, yIm, drawW, drawH);
-
-                  const caption = (img.caption || "").trim();
-                  if (caption) {
-                    doc.setFont("courier", "normal");
-                    doc.setFontSize(FONT_TABLE);
-                    const capLines = doc.splitTextToSize(caption, cellWidth - 4);
-                    const capY = cellY + cellHeight - 4;
-                    doc.text(capLines, cellX + cellWidth / 2, capY, { align: "center" });
-                  }
-                } catch (e) {
-                  console.error("Failed to add photo to PDF:", e);
-                }
-              });
-            }
-          }
-
-          // ---- Page numbers ----
-          const pageCount = doc.getNumberOfPages();
-          for (let i = 1; i <= pageCount; i++) {
-            doc.setPage(i);
-            const pw = doc.internal.pageSize.getWidth();
-            const ph = doc.internal.pageSize.getHeight();
-            const footerText = `Page ${i} of ${pageCount}`;
-            doc.setFont("courier", "normal");
-            doc.setFontSize(FONT_FOOTER);
-            const textWidth = doc.getTextWidth(footerText);
-            doc.text(footerText, pw - margin - textWidth, ph - 7);
-          }
-
-          const safeClient = clientName || "client";
-          const fileName   = `forestme-report-${safeClient}-${fileDate}.pdf`;
-          doc.save(fileName);
-        } catch (err) {
-          console.error("PDF error:", err);
-          alert("Error creating PDF: " + (err && err.message ? err.message : err));
-        } finally {
-          btn.disabled = false;
-          btn.textContent = "Generate PDF";
+      const supervisor       = document.getElementById("supervisor").value || "";
+      const shortDescription = document.getElementById("shortDescription").value || "";
+
+      const objectives = [];
+      for (let i = 1; i <= 6; i++) {
+        objectives.push(document.getElementById(`objective${i}`).value || "");
+      }
+
+      const potentialIssuesList = [];
+      for (let i = 1; i <= 6; i++) {
+        potentialIssuesList.push(document.getElementById(`potentialIssue${i}`).value || "");
+      }
+
+      // ---- Safety Report ----
+      const safetyResponses = [];
+      document.querySelectorAll("#safetyTable tbody tr").forEach(row => {
+        const questionCell = row.querySelector("td");
+        const question = questionCell ? questionCell.innerText.trim() : "";
+        const yes = row.querySelector('input[type="radio"][value="Yes"]:checked');
+        const no  = row.querySelector('input[type="radio"][value="No"]:checked');
+        let answer = "-";
+        if (yes) answer = "Yes";
+        else if (no) answer = "No";
+        safetyResponses.push({ question, answer });
+      });
+      const safetyNotes = document.getElementById("safetyNotes").value || "";
+
+      const startTime  = document.getElementById("startTime").value || "";
+      const finishTime = document.getElementById("finishTime").value || "";
+
+      const worksCompletedToday = document.getElementById("worksCompletedToday").value || "";
+      const notesForClient      = document.getElementById("notesForClient").value || "";
+
+      // Challenges & Solutions rows
+      const challengeRows = [];
+      document.querySelectorAll("#challengeTable tbody tr").forEach(row => {
+        const challenge = row.querySelector(".challenge-text").value.trim();
+        const solution  = row.querySelector(".solution-text").value.trim();
+        if (challenge || solution) {
+          challengeRows.push({ challenge, solution });
         }
       });
-    });
-  </script>
+
+      // Quantities rows
+      const qtyRows = [];
+      document.querySelectorAll("#qtyTable tbody tr").forEach(row => {
+        const unit = row.querySelector(".qty-unit").value.trim();
+        const amount = row.querySelector(".qty-amount").value.trim();
+        const cond = row.querySelector(".qty-conditions").value.trim();
+        if (unit || amount || cond) {
+          qtyRows.push({ unit, amount, cond });
+        }
+      });
+
+      // Photos (10 slots)
+      const photoSlots = [];
+      for (let i = 1; i <= 10; i++) {
+        const fileInput = document.getElementById(`photo${i}`);
+        const descInput = document.getElementById(`photoDesc${i}`);
+        const file = fileInput.files[0];
+        const desc = (descInput.value || "").trim();
+
+        if (file) {
+          if (!desc) {
+            alert(`Please add a description for Photo ${i}.`);
+            btn.disabled = false;
+            btn.textContent = "Generate PDF";
+            return;
+          }
+          photoSlots.push({ file, desc });
+        }
+      }
+
+      // ---- Setup PDF ----
+      const doc    = new jsPDF({ unit: "mm", format: "a4" });
+      const margin = 15;
+      const pageWidth  = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      let y = margin;
+
+      // Font sizes
+      const FONT_TITLE   = 14;
+      const FONT_SECTION = 11;
+      const FONT_BODY    = 9;
+      const FONT_LABEL   = 9;
+      const FONT_TABLE   = 8;
+      const FONT_FOOTER  = 8;
+      const LINE_HEIGHT_BODY  = 4;
+      const LINE_HEIGHT_TABLE = 4;
+
+      function ensureSpace(extraHeight = 20) {
+        if (y + extraHeight > pageHeight - 15) {
+          doc.addPage();
+          y = margin;
+        }
+      }
+
+      function addSectionTitle(title) {
+        y += 5;
+        ensureSpace(12);
+        doc.setFont("courier", "bold");
+        doc.setFontSize(FONT_SECTION);
+        doc.text(title, margin, y);
+        y += 6;
+      }
+
+      function addLabeledBox(label, value) {
+        const width = pageWidth - 2 * margin;
+        const text = (value && value.trim()) ? value : "-";
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(FONT_BODY);
+
+        const innerWidth = width - 8;
+        const lines = doc.splitTextToSize(text, innerWidth);
+        const lineHeight = LINE_HEIGHT_BODY;
+
+        const minBoxHeight = 14;
+        const contentHeight = lines.length * lineHeight;
+        const boxHeight = Math.max(minBoxHeight, contentHeight + 6);
+
+        ensureSpace(boxHeight + 10);
+
+        doc.setFont("courier", "bold");
+        doc.setFontSize(FONT_LABEL);
+        doc.text(label, margin, y);
+        y += 3.5;
+
+        const boxY = y;
+        doc.setDrawColor(200, 200, 200);
+        doc.setFillColor(250, 250, 250);
+        doc.roundedRect(margin, boxY, width, boxHeight, 2, 2, "FD");
+
+        const textBlockHeight = lines.length * lineHeight;
+        const verticalPadding = (boxHeight - textBlockHeight) / 2;
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(FONT_BODY);
+        doc.text(lines, margin + 4, boxY + verticalPadding + lineHeight * 0.75);
+
+        y += boxHeight + 5;
+
+        doc.setDrawColor(0, 0, 0);
+        doc.setFillColor(255, 255, 255);
+      }
+
+      // Numbered list that only shows filled rows
+      function addNumberedList(label, valuesArray) {
+        const filtered = valuesArray
+          .map(v => (v || "").trim())
+          .filter(v => v.length > 0);
+
+        if (filtered.length === 0) return;
+
+        const width = pageWidth - 2 * margin;
+        const rowHeight = 5;
+        const boxHeight = filtered.length * rowHeight + 6;
+
+        ensureSpace(boxHeight + 10);
+
+        doc.setFont("courier", "bold");
+        doc.setFontSize(FONT_LABEL);
+        doc.text(label, margin, y);
+        y += 3.5;
+
+        const boxY = y;
+        doc.setDrawColor(200, 200, 200);
+        doc.setFillColor(250, 250, 250);
+        doc.roundedRect(margin, boxY, width, boxHeight, 2, 2, "FD");
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(FONT_BODY);
+
+        let lineY = boxY + 7;
+        filtered.forEach((text, index) => {
+          doc.text(`${index + 1}.`, margin + 4, lineY);
+          doc.text(text, margin + 14, lineY);
+          lineY += rowHeight;
+        });
+
+        y += boxHeight + 5;
+
+        doc.setDrawColor(0, 0, 0);
+        doc.setFillColor(255, 255, 255);
+      }
+
+      function addSafetySection(safetyResponses, safetyNotes) {
+        addSectionTitle("Safety Report – Take 5");
+
+        const colYesWidth = 8;
+        const colNoWidth  = 8;
+        const colQWidth   = pageWidth - 2 * margin - colYesWidth - colNoWidth;
+
+        const colYesX = margin;
+        const colNoX  = margin + colYesWidth;
+        const colQX   = margin + colYesWidth + colNoWidth;
+
+        const headerHeight = 6;
+        ensureSpace(headerHeight + 4);
+
+        const totalWidth = colYesWidth + colNoWidth + colQWidth;
+
+        // Header row with green fill and straight corners
+        doc.setDrawColor(180, 180, 180);
+        doc.setFillColor(230, 242, 236);
+        doc.rect(colYesX, y, totalWidth, headerHeight, "FD");
+
+        doc.setDrawColor(180, 180, 180);
+        doc.line(colNoX, y, colNoX, y + headerHeight);
+        doc.line(colQX,  y, colQX,  y + headerHeight);
+
+        doc.setFont("courier", "bold");
+        doc.setFontSize(FONT_TABLE);
+        doc.setTextColor(0, 0, 0);
+        const headerCenterY = y + headerHeight / 2 + 1;
+        doc.text("Yes", colYesX + 2, headerCenterY);
+        doc.text("No",  colNoX  + 2, headerCenterY);
+        doc.text("Question", colQX + 2, headerCenterY);
+
+        y += headerHeight;
+
+        // Body rows with straight-corner cells
+        doc.setFont("courier", "normal");
+        doc.setFontSize(FONT_TABLE);
+        doc.setDrawColor(200, 200, 200);
+        doc.setFillColor(255, 255, 255);
+
+        safetyResponses.forEach((item) => {
+          const qText = item.question || "";
+          const qLines = doc.splitTextToSize(qText, colQWidth - 4);
+          const lineCount = Math.max(1, qLines.length);
+          const rowHeight = lineCount * LINE_HEIGHT_TABLE + 2;
+
+          ensureSpace(rowHeight + 2);
+
+          doc.rect(colYesX, y, colYesWidth, rowHeight);
+          doc.rect(colNoX,  y, colNoWidth,  rowHeight);
+          doc.rect(colQX,   y, colQWidth,   rowHeight);
+
+          const boxSize = 3.5;
+          const yesBoxX = colYesX + (colYesWidth - boxSize) / 2;
+          const noBoxX  = colNoX  + (colNoWidth  - boxSize) / 2;
+          const boxY    = y + (rowHeight - boxSize) / 2;
+
+          doc.rect(yesBoxX, boxY, boxSize, boxSize);
+          doc.rect(noBoxX,  boxY, boxSize, boxSize);
+
+          if (item.answer === "Yes") {
+            doc.text("X", yesBoxX + 1, boxY + boxSize - 0.5);
+          } else if (item.answer === "No") {
+            doc.text("X", noBoxX + 1, boxY + boxSize - 0.5);
+          }
+
+          const lineCountEff = Math.max(1, qLines.length);
+          const textBlockHeight = lineCountEff * LINE_HEIGHT_TABLE;
+          const baseY = y + (rowHeight - textBlockHeight) / 2 + LINE_HEIGHT_TABLE * 0.75;
+
+          doc.text(qLines, colQX + 2, baseY);
+
+          y += rowHeight;
+        });
+
+        // Extra gap before Additional Safety Notes
+        y += 7;
+
+        addLabeledBox("Additional Safety Notes", safetyNotes);
+      }
+
+      // ---- Logo ----
+      const logoDataUrl = await readFileAsDataURL(logoFile);
+      const logoImg = await loadImage(logoDataUrl);
+      const maxLogoWidth = 80;
+      const aspect = logoImg.height / logoImg.width;
+      const logoWidth = Math.min(maxLogoWidth, pageWidth - 2 * margin);
+      const logoHeight = logoWidth * aspect;
+      const logoX = (pageWidth - logoWidth) / 2;
+      const logoFormat = logoFile.type === "image/png" ? "PNG" : "JPEG";
+      doc.addImage(logoDataUrl, logoFormat, logoX, y, logoWidth, logoHeight);
+      y += logoHeight + 8;
+
+      // Title
+      doc.setFont("courier", "bold");
+      doc.setFontSize(FONT_TITLE);
+      doc.text("Daily Site Report", pageWidth / 2, y, { align: "center" });
+      y += 8;
+
+      // ---- Job Details (Page 1) ----
+      addSectionTitle("Job Details");
+      addLabeledBox("Client Name",         clientName);
+      addLabeledBox("Project / Site Name", projectName);
+      addLabeledBox("Location",            location);
+      addLabeledBox("Date",                displayDate);
+      addLabeledBox("Supervisor",          supervisor);
+
+      // ---- Job Description (Page 1) ----
+      addSectionTitle("Job Description");
+      addLabeledBox("Short Description", shortDescription);
+      addNumberedList("Today's Objectives", objectives);
+      addNumberedList("Potential Issues",  potentialIssuesList);
+
+      // ---- Safety ----
+      addSafetySection(safetyResponses, safetyNotes);
+
+      // ---- PAGE 2+: Quantities & Outputs + Work Summary ----
+      doc.addPage();
+      y = margin;
+
+      // ---- Quantities & Outputs ----
+      if (qtyRows.length > 0) {
+        addSectionTitle("Quantities & Outputs");
+
+        const col1Width = 50;
+        const col2Width = 25;
+        const col3Width = pageWidth - margin - (margin + col1Width + col2Width);
+
+        const col1X = margin;
+        const col2X = margin + col1Width;
+        const col3X = margin + col1Width + col2Width;
+
+        const headerHeight = 7;
+        ensureSpace(headerHeight + 4);
+
+        const totalWidthQ = col1Width + col2Width + col3Width;
+
+        // Header with green fill, straight corners
+        doc.setFont("courier", "bold");
+        doc.setFontSize(FONT_TABLE);
+        doc.setDrawColor(180, 180, 180);
+        doc.setFillColor(230, 242, 236);
+        doc.rect(col1X, y, totalWidthQ, headerHeight, "FD");
+        doc.setDrawColor(180, 180, 180);
+        doc.line(col2X, y, col2X, y + headerHeight);
+        doc.line(col3X, y, col3X, y + headerHeight);
+
+        const headerCenterYQ = y + headerHeight / 2 + 1;
+        doc.setTextColor(0, 0, 0);
+        doc.text("Unit Type", col1X + 2, headerCenterYQ);
+        doc.text("Amount",    col2X + 2, headerCenterYQ);
+        doc.text("Conditions / Reasons", col3X + 2, headerCenterYQ);
+
+        y += headerHeight;
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(FONT_TABLE);
+        doc.setDrawColor(200, 200, 200);
+        doc.setFillColor(255, 255, 255);
+
+        qtyRows.forEach(row => {
+          const unitText   = row.unit || "-";
+          const amountText = row.amount || "-";
+          const condText   = row.cond || "-";
+
+          const unitLines   = doc.splitTextToSize(unitText,   col1Width - 4);
+          const amountLines = doc.splitTextToSize(amountText, col2Width - 4);
+          const condLines   = doc.splitTextToSize(condText,   col3Width - 4);
+
+          const lineCount = Math.max(unitLines.length, amountLines.length, condLines.length);
+          const rowHeight = lineCount * LINE_HEIGHT_TABLE + 2;
+
+          ensureSpace(rowHeight + 2);
+
+          doc.rect(col1X, y, col1Width, rowHeight);
+          doc.rect(col2X, y, col2Width, rowHeight);
+          doc.rect(col3X, y, col3Width, rowHeight);
+
+          const unitBlockHeight   = unitLines.length   * LINE_HEIGHT_TABLE;
+          const amountBlockHeight = amountLines.length * LINE_HEIGHT_TABLE;
+          const condBlockHeight   = condLines.length   * LINE_HEIGHT_TABLE;
+
+          const unitBaseY   = y + (rowHeight - unitBlockHeight)   / 2 + LINE_HEIGHT_TABLE * 0.75;
+          const amountBaseY = y + (rowHeight - amountBlockHeight) / 2 + LINE_HEIGHT_TABLE * 0.75;
+          const condBaseY   = y + (rowHeight - condBlockHeight)   / 2 + LINE_HEIGHT_TABLE * 0.75;
+
+          doc.text(unitLines,   col1X + 2, unitBaseY);
+          doc.text(amountLines, col2X + 2, amountBaseY);
+          doc.text(condLines,   col3X + 2, condBaseY);
+
+          y += rowHeight;
+        });
+
+        y += 3;
+      }
+
+      // ---- Work Summary ----
+      addSectionTitle("Work Summary");
+      addLabeledBox("Start Time", startTime);
+      addLabeledBox("Finish Time", finishTime);
+      addLabeledBox("What works were completed today?", worksCompletedToday);
+
+      if (challengeRows.length > 0) {
+        ensureSpace(10);
+        doc.setFont("courier", "bold");
+        doc.setFontSize(FONT_TABLE);
+        doc.text("Challenges & Solutions", margin, y);
+        y += 4.5;
+
+        const tableWidth = pageWidth - 2 * margin;
+        const col1Width = tableWidth * 0.5;
+        const col2Width = tableWidth - col1Width;
+
+        const col1X = margin;
+        const col2X = margin + col1Width;
+
+        const headerHeight = 7;
+        ensureSpace(headerHeight + 4);
+
+        // Header with green fill
+        doc.setDrawColor(180, 180, 180);
+        doc.setFillColor(230, 242, 236);
+        doc.rect(col1X, y, tableWidth, headerHeight, "FD");
+        doc.setDrawColor(180, 180, 180);
+        doc.line(col2X, y, col2X, y + headerHeight);
+
+        const headerCenterY = y + headerHeight / 2 + 1;
+        doc.text("Challenges", col1X + 2, headerCenterY);
+        doc.text("Solutions",  col2X + 2, headerCenterY);
+
+        y += headerHeight;
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(FONT_TABLE);
+        doc.setDrawColor(200, 200, 200);
+        doc.setFillColor(255, 255, 255);
+
+        challengeRows.forEach(row => {
+          const chText = row.challenge || "-";
+          const solText = row.solution || "-";
+
+          const chLines  = doc.splitTextToSize(chText,  col1Width - 4);
+          const solLines = doc.splitTextToSize(solText, col2Width - 4);
+
+          const lineCount = Math.max(chLines.length, solLines.length);
+          const rowHeight = lineCount * LINE_HEIGHT_TABLE + 2;
+
+          ensureSpace(rowHeight + 2);
+
+          doc.rect(col1X, y, col1Width, rowHeight);
+          doc.rect(col2X, y, col2Width, rowHeight);
+
+          const chBlockHeight  = chLines.length * LINE_HEIGHT_TABLE;
+          const solBlockHeight = solLines.length * LINE_HEIGHT_TABLE;
+          const chBaseY  = y + (rowHeight - chBlockHeight)  / 2 + LINE_HEIGHT_TABLE * 0.75;
+          const solBaseY = y + (rowHeight - solBlockHeight) / 2 + LINE_HEIGHT_TABLE * 0.75;
+
+          doc.text(chLines,  col1X + 2, chBaseY);
+          doc.text(solLines, col2X + 2, solBaseY);
+
+          y += rowHeight;
+        });
+
+        // Extra gap before Notes for Client
+        y += 7;
+      }
+
+      addLabeledBox("Notes for Client", notesForClient);
+
+      // ---- Work Photos page ----
+      if (photoSlots.length > 0) {
+        const images = [];
+        for (const slot of photoSlots) {
+          try {
+            const img = await processImageToPortrait(slot.file);
+            images.push({
+              url: img.url,
+              type: img.type,
+              width: img.width,
+              height: img.height,
+              caption: slot.desc
+            });
+          } catch (e) {
+            console.error("Failed to process image", slot.file.name, e);
+          }
+        }
+
+        if (images.length > 0) {
+          doc.addPage();
+          const pW = doc.internal.pageSize.getWidth();
+          const pH = doc.internal.pageSize.getHeight();
+
+          const photosMargin  = margin;
+          let yPhotos = photosMargin;
+
+          doc.setFont("courier", "bold");
+          doc.setFontSize(FONT_SECTION);
+          doc.text("Work Photos", photosMargin, yPhotos);
+          yPhotos += 5;
+
+          const topY           = yPhotos;
+          const availableWidth = pW - 2 * photosMargin;
+          const availableHeight= pH - topY - photosMargin;
+
+          const n = images.length;
+          const cols = n === 1 ? 1 : 2;
+          const rows = Math.ceil(n / cols);
+
+          const cellPad    = 2;
+          const cellWidth  = availableWidth / cols;
+          const cellHeight = availableHeight / rows;
+
+          images.forEach((img, index) => {
+            try {
+              const colIndex = index % cols;
+              const rowIndex = Math.floor(index / cols);
+
+              const cellX = photosMargin + colIndex * cellWidth;
+              const cellY = topY + rowIndex * cellHeight;
+
+              const iw = img.width;
+              const ih = img.height;
+
+              const scale = Math.min(
+                (cellWidth  - 2 * cellPad) / iw,
+                (cellHeight - 2 * cellPad - 10) / ih
+              );
+
+              const drawW = iw * scale;
+              const drawH = ih * scale;
+
+              const x   = cellX + (cellWidth  - drawW)  / 2;
+              const yIm = cellY + 4;
+
+              let format = "JPEG";
+              if (img.type === "image/png") format = "PNG";
+
+              doc.setDrawColor(200, 200, 200);
+              doc.rect(cellX, cellY, cellWidth, cellHeight);
+              doc.addImage(img.url, format, x, yIm, drawW, drawH);
+
+              const caption = (img.caption || "").trim();
+              if (caption) {
+                doc.setFont("courier", "normal");
+                doc.setFontSize(FONT_TABLE);
+                const capLines = doc.splitTextToSize(caption, cellWidth - 4);
+                const capY = cellY + cellHeight - 4;
+                doc.text(capLines, cellX + cellWidth / 2, capY, { align: "center" });
+              }
+            } catch (e) {
+              console.error("Failed to add photo to PDF:", e);
+            }
+          });
+        }
+      }
+
+      // ---- Page numbers ----
+      const pageCount = doc.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        const pw = doc.internal.pageSize.getWidth();
+        const ph = doc.internal.pageSize.getHeight();
+        const footerText = `Page ${i} of ${pageCount}`;
+        doc.setFont("courier", "normal");
+        doc.setFontSize(FONT_FOOTER);
+        const textWidth = doc.getTextWidth(footerText);
+        doc.text(footerText, pw - margin - textWidth, ph - 7);
+      }
+
+      const safeClient = clientName || "client";
+      const fileName   = `forestme-report-${safeClient}-${fileDate}.pdf`;
+      doc.save(fileName);
+
+    } catch (err) {
+      console.error("PDF error:", err);
+      alert("Error creating PDF: " + (err && err.message ? err.message : err));
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Generate PDF";
+    }
+  });
+});
+</script>
 </body>
 </html>
