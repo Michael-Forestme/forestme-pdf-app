@@ -1,1099 +1,742 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU">
 <head>
-<meta charset="UTF-8" />
-<title>Forestme – Daily Site Report</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Forestme — Daily Site Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  background: #f5f5f5;
-}
-h1 { text-align: center; margin-bottom: 1rem; }
-form {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-fieldset {
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  margin-bottom: 16px;
-  padding: 12px 16px;
-}
-legend {
-  font-weight: 600;
-  padding: 0 6px;
-}
-label {
-  display: block;
-  font-size: 0.9rem;
-  margin-top: 8px;
-  margin-bottom: 4px;
-}
-input[type="text"],
-input[type="date"],
-input[type="time"],
-textarea {
-  width: 100%;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 0.95rem;
-  box-sizing: border-box;
-}
-textarea { min-height: 70px; resize: vertical; }
-input[type="file"] { margin-top: 6px; }
-button {
-  margin-top: 16px;
-  padding: 10px 16px;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background: #14532d;
-  color: #fff;
-}
-button:disabled { opacity: 0.6; cursor: not-allowed; }
-.small-note { font-size: 0.8rem; color: #555; }
+  :root{
+    --green-900:#004225; --green-700:#2D6A4F; --green-100:#D8EFE3;
+    --accent:#52B788; --paper:#FAFCFB; --ink:#1A2B22; --line:#CBE0D3;
+    --warn:#B3261E; --warn-bg:#FBEDEB;
+    --serif:'Source Serif 4', Georgia, serif;
+    --sans:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; padding-bottom:96px;}
+  .wrap{max-width:720px; margin:0 auto; padding:0 14px;}
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 8px;
-}
-th, td {
-  border: 1px solid #ddd;
-  padding: 6px;
-  font-size: 0.9rem;
-  vertical-align: top;
-}
-th {
-  background: #f3f3f3;
-  font-weight: 600;
-  text-align: left;
-}
-td input[type="text"],
-td textarea {
-  width: 100%;
-  border: none;
-  padding: 4px;
-  font-size: 0.9rem;
-  box-sizing: border-box;
-}
-td textarea {
-  resize: vertical;
-  min-height: 40px;
-}
+  header{background:#fff; border-bottom:4px solid var(--green-900); padding:14px 0 12px;}
+  header .wrap{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  header img{height:44px; width:auto;}
+  header .ht{text-align:right;}
+  header h1{font-family:var(--serif); font-size:20px; color:var(--green-900); font-weight:700; line-height:1.1;}
+  header .sub{font-size:11px; color:var(--green-700); letter-spacing:.06em; text-transform:uppercase;}
 
-.photo-block {
-  border: 1px solid #eee;
-  border-radius: 6px;
-  padding: 8px;
-  margin-bottom: 8px;
-  background: #fafafa;
-}
-.photo-block-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
+  section.card{background:#fff; border:1px solid var(--line); border-radius:10px; margin:16px 0; overflow:hidden;}
+  .card h2{font-family:var(--serif); font-size:17px; font-weight:700; color:#fff;
+    background:var(--green-900); padding:10px 14px; display:flex; align-items:baseline; gap:10px;}
+  .card h2 .stub{font-size:11px; font-weight:600; color:var(--green-100); letter-spacing:.08em; font-family:var(--sans);}
+  .card h2 .opt{margin-left:auto; font-family:var(--sans); font-size:11px; font-weight:400; color:var(--green-100);}
+  .card .body{padding:14px;}
 
-.numbered-list {
-  margin-top: 4px;
-}
-.numbered-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 4px;
-}
-.numbered-row span {
-  display: inline-block;
-  width: 18px;
-  font-size: 0.85rem;
-  color: #555;
-}
-.numbered-row input {
-  flex: 1;
-}
+  label.f{display:block; font-size:12px; font-weight:600; color:var(--green-700); margin:10px 0 4px; letter-spacing:.02em;}
+  label.f:first-child{margin-top:0;}
+  input[type=text], input[type=date], input[type=time], input[type=number], select, textarea{
+    width:100%; padding:12px; border:1.5px solid var(--line); border-radius:8px;
+    font-size:16px; font-family:var(--sans); background:#fff; color:var(--ink);}
+  textarea{min-height:96px; resize:vertical;}
+  input:focus, select:focus, textarea:focus{outline:2px solid var(--accent); border-color:var(--accent);}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
+  .hint{font-size:12px; color:#5c7266; margin-top:4px;}
 
-#safetyTable th:nth-child(2),
-#safetyTable th:nth-child(3),
-#safetyTable td:nth-child(2),
-#safetyTable td:nth-child(3) {
-  text-align: center;
-  width: 60px;
-}
+  /* Take 5 */
+  .t5{border-bottom:1px solid var(--line); padding:10px 0; display:flex; align-items:center; gap:10px;}
+  .t5:last-of-type{border-bottom:none;}
+  .t5 .q{flex:1; font-size:14px; line-height:1.35;}
+  .t5 .yn{display:flex; gap:6px; flex-shrink:0;}
+  .yn button{width:52px; padding:9px 0; border:1.5px solid var(--line); background:#fff; border-radius:8px;
+    font-size:13px; font-weight:700; color:#5c7266; cursor:pointer;}
+  .yn button.yes.on{background:var(--green-700); border-color:var(--green-700); color:#fff;}
+  .yn button.no.on{background:var(--warn); border-color:var(--warn); color:#fff;}
+
+  /* Quantities */
+  table.qty{width:100%; border-collapse:collapse;}
+  table.qty th{font-size:11px; font-weight:700; color:var(--green-700); text-align:left;
+    padding:4px; letter-spacing:.03em; border-bottom:2px solid var(--green-700);}
+  table.qty td{padding:5px 4px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  table.qty input{padding:9px;}
+  table.qty td.n{width:20%;}
+  table.qty td.item{width:40%;}
+  .addrow{margin-top:10px; padding:10px 16px; border:1.5px dashed var(--green-700); border-radius:8px;
+    background:#fff; color:var(--green-900); font-size:14px; font-weight:700; cursor:pointer;}
+
+  /* Issues */
+  .issue{border:1px solid var(--line); border-radius:8px; padding:10px; margin-bottom:10px; background:var(--paper);}
+  .issue .tag{font-size:11px; font-weight:700; color:var(--green-700); letter-spacing:.06em;}
+
+  /* Photos */
+  .addbtn{display:block; width:100%; padding:14px; border:2px dashed var(--green-700); border-radius:10px;
+    background:var(--green-100); color:var(--green-900); font-size:15px; font-weight:700; cursor:pointer; text-align:center;}
+  .ph{display:flex; gap:10px; margin-top:12px; align-items:flex-start;}
+  .ph img{width:96px; height:72px; object-fit:cover; border-radius:8px; border:1px solid var(--line); flex-shrink:0;}
+  .ph .pd{flex:1;}
+  .ph textarea{min-height:56px; font-size:14px;}
+  .ph .rm{background:none; border:none; color:var(--warn); font-size:13px; font-weight:700; cursor:pointer; padding:4px;}
+  .pcount{font-size:12px; color:#5c7266; margin-top:8px;}
+
+  /* Sign-off */
+  .waive{display:flex; align-items:center; gap:8px; font-size:14px; color:var(--ink); margin-bottom:12px; cursor:pointer;}
+  .waive input{width:20px; height:20px; accent-color:var(--green-700);}
+  #sigPad{width:100%; height:150px; border:1.5px solid var(--line); border-radius:8px; background:#fff;
+    touch-action:none; display:block;}
+  .sigrow{display:flex; justify-content:space-between; align-items:center; margin-top:4px;}
+  #signBlock.off{opacity:.35; pointer-events:none;}
+
+  /* Sticky docket bar */
+  .bar{position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:2px solid var(--green-900);
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom)); z-index:50;}
+  .bar .wrap{display:flex; gap:10px; align-items:center;}
+  .bar .state{flex:1; font-size:12.5px; line-height:1.3; color:var(--warn);}
+  .bar .state.ok{color:var(--green-700); font-weight:700;}
+  .bar button{padding:13px 16px; border-radius:9px; font-size:14px; font-weight:700; cursor:pointer; border:none; white-space:nowrap;}
+  #btnPdf{background:#fff; color:var(--green-900); border:1.5px solid var(--green-900);}
+  #btnSend{background:var(--green-900); color:#fff;}
+  .bar button:disabled{opacity:.4; cursor:not-allowed;}
+
+  .toast{position:fixed; top:14px; left:50%; transform:translateX(-50%); background:var(--green-900); color:#fff;
+    padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; z-index:99; display:none; max-width:90%;}
+  .toast.err{background:var(--warn);}
+
+  @media (max-width:480px){ .row3{grid-template-columns:1fr;} header h1{font-size:17px;} }
+  @media (prefers-reduced-motion:no-preference){
+    .yn button, .bar button{transition:background .15s, color .15s, opacity .15s;}
+  }
 </style>
 </head>
 <body>
-<h1>Forestme – Daily Site Report</h1>
 
-<form id="reportForm">
-  <fieldset>
-    <legend>Branding</legend>
-    <label>Forestme Logo (required)
-      <input type="file" id="logoInput" accept="image/*" required />
-    </label>
-    <p class="small-note">
-      Select your Forestme logo. It will be printed at the top of page 1 in the PDF.
-    </p>
-  </fieldset>
-
-  <fieldset>
-    <legend>Job Details</legend>
-    <label>Client Name
-      <input type="text" id="clientName" />
-    </label>
-    <label>Project / Site Name
-      <input type="text" id="projectName" />
-    </label>
-    <label>Location
-      <input type="text" id="location" />
-    </label>
-    <label>Date
-      <input type="date" id="date" />
-    </label>
-    <label>Supervisor
-      <input type="text" id="supervisor" />
-    </label>
-  </fieldset>
-
-  <fieldset>
-    <legend>Job Description</legend>
-    <label>Short Description
-      <textarea id="shortDescription" placeholder="Basic outline of the day's work according to the briefing."></textarea>
-    </label>
-
-    <label>Today's Objectives</label>
-    <div class="numbered-list">
-      <div class="numbered-row"><span>1.</span><input type="text" id="objective1" /></div>
-      <div class="numbered-row"><span>2.</span><input type="text" id="objective2" /></div>
-      <div class="numbered-row"><span>3.</span><input type="text" id="objective3" /></div>
-      <div class="numbered-row"><span>4.</span><input type="text" id="objective4" /></div>
-      <div class="numbered-row"><span>5.</span><input type="text" id="objective5" /></div>
-      <div class="numbered-row"><span>6.</span><input type="text" id="objective6" /></div>
+<header>
+  <div class="wrap">
+    <img id="logoImg" alt="Forestme" src="">
+    <div class="ht">
+      <h1>Daily Site Report</h1>
+      <div class="sub">Liquid Forest Pty Ltd</div>
     </div>
+  </div>
+</header>
 
-    <label>Potential Issues</label>
-    <div class="numbered-list">
-      <div class="numbered-row"><span>1.</span><input type="text" id="potentialIssue1" /></div>
-      <div class="numbered-row"><span>2.</span><input type="text" id="potentialIssue2" /></div>
-      <div class="numbered-row"><span>3.</span><input type="text" id="potentialIssue3" /></div>
-      <div class="numbered-row"><span>4.</span><input type="text" id="potentialIssue4" /></div>
-      <div class="numbered-row"><span>5.</span><input type="text" id="potentialIssue5" /></div>
-      <div class="numbered-row"><span>6.</span><input type="text" id="potentialIssue6" /></div>
+<main class="wrap">
+
+  <section class="card">
+    <h2><span class="stub">01</span> Job details</h2>
+    <div class="body">
+      <div class="row2">
+        <div>
+          <label class="f" for="fClient">Client (business name)</label>
+          <input type="text" id="fClient" placeholder="e.g. XYZ Contractors Pty Ltd">
+        </div>
+        <div>
+          <label class="f" for="fProject">Site / project name</label>
+          <input type="text" id="fProject" placeholder="e.g. Hexham Straight Widening">
+        </div>
+      </div>
+      <div class="row2">
+        <div>
+          <label class="f" for="fContactName">Site contact name</label>
+          <input type="text" id="fContactName" placeholder="Client's person on site">
+        </div>
+        <div>
+          <label class="f" for="fContactNum">Site contact number</label>
+          <input type="text" id="fContactNum" inputmode="tel" placeholder="04xx xxx xxx">
+        </div>
+      </div>
+      <div class="row2">
+        <div>
+          <label class="f" for="fDate">Date</label>
+          <input type="date" id="fDate">
+        </div>
+        <div>
+          <label class="f" for="fSuper">Team leader</label>
+          <input type="text" id="fSuper" autocomplete="name" placeholder="Your name">
+        </div>
+      </div>
+      <div class="row2">
+        <div>
+          <label class="f" for="fCrew">Crew size</label>
+          <input type="number" id="fCrew" min="1" max="60" inputmode="numeric" placeholder="e.g. 6">
+        </div>
+        <div>
+          <label class="f" for="fWeather">Weather</label>
+          <select id="fWeather">
+            <option value="">Select…</option>
+            <option>Fine</option><option>Overcast</option><option>Showers</option>
+            <option>Rain</option><option>Extreme heat</option><option>High wind</option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div>
+          <label class="f" for="fStart">On site</label>
+          <input type="time" id="fStart">
+        </div>
+        <div>
+          <label class="f" for="fFinish">Off site</label>
+          <input type="time" id="fFinish">
+        </div>
+      </div>
     </div>
-  </fieldset>
+  </section>
 
-  <fieldset>
-    <legend>Safety Report – Take 5</legend>
-    <p class="small-note">Complete before work commences and if conditions change.</p>
-
-    <table id="safetyTable">
-      <thead>
-        <tr>
-          <th>Safety Check</th>
-          <th>Yes</th>
-          <th>No</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1. Do I have the correct PPE for today’s tasks and site conditions?</td>
-          <td><input type="radio" name="safety1" value="Yes"></td>
-          <td><input type="radio" name="safety1" value="No"></td>
-        </tr>
-        <tr>
-          <td>2. Is all PPE, tools and equipment in safe working condition?</td>
-          <td><input type="radio" name="safety2" value="Yes"></td>
-          <td><input type="radio" name="safety2" value="No"></td>
-        </tr>
-        <tr>
-          <td>3. Do I have the correct tools and equipment to complete today’s tasks safely?</td>
-          <td><input type="radio" name="safety3" value="Yes"></td>
-          <td><input type="radio" name="safety3" value="No"></td>
-        </tr>
-        <tr>
-          <td>4. Am I clear on today’s scope of works and work areas?</td>
-          <td><input type="radio" name="safety4" value="Yes"></td>
-          <td><input type="radio" name="safety4" value="No"></td>
-        </tr>
-        <tr>
-          <td>5. Have I reviewed and understood the applicable SWMS / JSA and site rules?</td>
-          <td><input type="radio" name="safety5" value="Yes"></td>
-          <td><input type="radio" name="safety5" value="No"></td>
-        </tr>
-        <tr>
-          <td>6. Do I have the required training and competency for today’s tasks?</td>
-          <td><input type="radio" name="safety6" value="Yes"></td>
-          <td><input type="radio" name="safety6" value="No"></td>
-        </tr>
-        <tr>
-          <td>7. Am I fit for work today (not fatigued and free from drugs/alcohol)?</td>
-          <td><input type="radio" name="safety7" value="Yes"></td>
-          <td><input type="radio" name="safety7" value="No"></td>
-        </tr>
-        <tr>
-          <td>8. Am I well enough to work safely today?</td>
-          <td><input type="radio" name="safety8" value="Yes"></td>
-          <td><input type="radio" name="safety8" value="No"></td>
-        </tr>
-        <tr>
-          <td>9. Do I have sufficient water, food and rest breaks planned?</td>
-          <td><input type="radio" name="safety9" value="Yes"></td>
-          <td><input type="radio" name="safety9" value="No"></td>
-        </tr>
-        <tr>
-          <td>10. Have I checked the work area for slip, trip and fall hazards?</td>
-          <td><input type="radio" name="safety10" value="Yes"></td>
-          <td><input type="radio" name="safety10" value="No"></td>
-        </tr>
-        <tr>
-          <td>11. Are environmental and heritage controls understood and in place?</td>
-          <td><input type="radio" name="safety11" value="Yes"></td>
-          <td><input type="radio" name="safety11" value="No"></td>
-        </tr>
-        <tr>
-          <td>12. Are weather conditions suitable and controls applied?</td>
-          <td><input type="radio" name="safety12" value="Yes"></td>
-          <td><input type="radio" name="safety12" value="No"></td>
-        </tr>
-        <tr>
-          <td>13. Are controls in place for vehicle, plant and contractor interaction?</td>
-          <td><input type="radio" name="safety13" value="Yes"></td>
-          <td><input type="radio" name="safety13" value="No"></td>
-        </tr>
-        <tr>
-          <td>14. Do I know who the site supervisor / safety contact is?</td>
-          <td><input type="radio" name="safety14" value="Yes"></td>
-          <td><input type="radio" name="safety14" value="No"></td>
-        </tr>
-        <tr>
-          <td>15. Do I know the site emergency procedures and muster point?</td>
-          <td><input type="radio" name="safety15" value="Yes"></td>
-          <td><input type="radio" name="safety15" value="No"></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <label style="margin-top:10px;">Additional Safety Notes
-      <textarea id="safetyNotes" placeholder="Record hazards, controls or actions required if any answer is ‘No’."></textarea>
-    </label>
-  </fieldset>
-
-  <fieldset>
-    <legend>Quantities & Outputs</legend>
-    <p class="small-note">Use this table for plants, jute, mulch, pins, etc. Fill as many rows as you need.</p>
-    <table id="qtyTable">
-      <thead>
-        <tr>
-          <th style="width: 25%;">Unit Type</th>
-          <th style="width: 15%;">Amount</th>
-          <th>Conditions / Reasons</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><input type="text" class="qty-unit" placeholder="e.g. Trees, Jute, Pins" /></td>
-          <td><input type="text" class="qty-amount" placeholder="e.g. 3,500" /></td>
-          <td><textarea class="qty-conditions" placeholder="e.g. Area A only, compacted batter, etc."></textarea></td>
-        </tr>
-        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
-        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
-        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
-        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
-        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
-        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
-        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
-        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
-        <tr><td><input type="text" class="qty-unit" /></td><td><input type="text" class="qty-amount" /></td><td><textarea class="qty-conditions"></textarea></td></tr>
-      </tbody>
-    </table>
-  </fieldset>
-
-  <fieldset>
-    <legend>Work Summary</legend>
-
-    <label>Start Time
-      <input type="time" id="startTime" />
-    </label>
-
-    <label>Finish Time
-      <input type="time" id="finishTime" />
-    </label>
-
-    <label>What works were completed today?
-      <textarea id="worksCompletedToday" placeholder="Briefly describe the main tasks completed on site today."></textarea>
-    </label>
-
-    <label>Challenges &amp; Solutions</label>
-    <table id="challengeTable">
-      <thead>
-        <tr>
-          <th style="width: 50%;">Challenges</th>
-          <th>Solutions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td><textarea class="challenge-text"></textarea></td><td><textarea class="solution-text"></textarea></td></tr>
-        <tr><td><textarea class="challenge-text"></textarea></td><td><textarea class="solution-text"></textarea></td></tr>
-        <tr><td><textarea class="challenge-text"></textarea></td><td><textarea class="solution-text"></textarea></td></tr>
-        <tr><td><textarea class="challenge-text"></textarea></td><td><textarea class="solution-text"></textarea></td></tr>
-        <tr><td><textarea class="challenge-text"></textarea></td><td><textarea class="solution-text"></textarea></td></tr>
-      </tbody>
-    </table>
-
-    <label>Notes for Client
-      <textarea id="notesForClient" placeholder="Any additional notes or observations relevant to the client."></textarea>
-    </label>
-  </fieldset>
-
-  <fieldset>
-    <legend>Work Photos</legend>
-    <p class="small-note">
-      Upload up to ten key photos from the day.<br>
-      Each photo must have a description explaining what we’re looking at.
-    </p>
-
-    <div class="photo-block">
-      <div class="photo-block-title">Photo 1</div>
-      <label>Image <input type="file" id="photo1" accept="image/*" /></label>
-      <label>Description (required if photo is added)
-        <textarea id="photoDesc1" placeholder="e.g. Overview of Area A batter after jute install."></textarea>
-      </label>
+  <section class="card">
+    <h2><span class="stub">02</span> Take 5 safety check <span class="opt">all 15 required</span></h2>
+    <div class="body" id="take5"></div>
+    <div class="body" style="padding-top:0">
+      <label class="f" for="fHazards">Hazard notes</label>
+      <textarea id="fHazards" placeholder="Anything raised in the Take 5, controls put in place… (leave blank if nothing)"></textarea>
     </div>
+  </section>
 
-    <div class="photo-block">
-      <div class="photo-block-title">Photo 2</div>
-      <label>Image <input type="file" id="photo2" accept="image/*" /></label>
-      <label>Description (required if photo is added) <textarea id="photoDesc2"></textarea></label>
+  <section class="card">
+    <h2><span class="stub">03</span> Quantities &amp; outputs</h2>
+    <div class="body">
+      <table class="qty" id="qtyTable">
+        <thead><tr><th>Stock &amp; size</th><th>Qty</th><th>Ground cover &amp; conditions</th></tr></thead>
+        <tbody id="qtyBody"></tbody>
+      </table>
+      <button type="button" class="addrow" id="btnAddQty">＋ Add row</button>
+      <p class="hint">One row per stock line — blank rows are left off the report.</p>
     </div>
+  </section>
 
-    <div class="photo-block">
-      <div class="photo-block-title">Photo 3</div>
-      <label>Image <input type="file" id="photo3" accept="image/*" /></label>
-      <label>Description (required if photo is added) <textarea id="photoDesc3"></textarea></label>
+  <section class="card">
+    <h2><span class="stub">04</span> Extra hours <span class="opt">stand-down · labour · inductions</span></h2>
+    <div class="body">
+      <div id="xhrs"></div>
+      <button type="button" class="addrow" id="btnAddXhr">＋ Add another entry</button>
+      <p class="hint">Every entry needs times, a reason and a description — leave untouched if none today.</p>
     </div>
+  </section>
 
-    <div class="photo-block">
-      <div class="photo-block-title">Photo 4</div>
-      <label>Image <input type="file" id="photo4" accept="image/*" /></label>
-      <label>Description (required if photo is added) <textarea id="photoDesc4"></textarea></label>
+  <section class="card">
+    <h2><span class="stub">05</span> Works completed</h2>
+    <div class="body">
+      <textarea id="fWorks" placeholder="What the crew did today — areas planted, progress against the job…"></textarea>
     </div>
+  </section>
 
-    <div class="photo-block">
-      <div class="photo-block-title">Photo 5</div>
-      <label>Image <input type="file" id="photo5" accept="image/*" /></label>
-      <label>Description (required if photo is added) <textarea id="photoDesc5"></textarea></label>
+  <section class="card">
+    <h2><span class="stub">06</span> Issues &amp; actions <span class="opt">optional</span></h2>
+    <div class="body">
+      <div id="issues"></div>
+      <button type="button" class="addrow" id="btnAddIssue">＋ Add another issue</button>
+      <p class="hint">Leave blank on a clean day — empty issues are left off the report.</p>
     </div>
+  </section>
 
-    <div class="photo-block">
-      <div class="photo-block-title">Photo 6</div>
-      <label>Image <input type="file" id="photo6" accept="image/*" /></label>
-      <label>Description (required if photo is added) <textarea id="photoDesc6"></textarea></label>
+  <section class="card">
+    <h2><span class="stub">07</span> Notes for client <span class="opt">optional</span></h2>
+    <div class="body">
+      <textarea id="fNotes" placeholder="Anything the client needs to know or action — access, deliveries, requests…"></textarea>
     </div>
+  </section>
 
-    <!-- Added photos 7–10 -->
-    <div class="photo-block">
-      <div class="photo-block-title">Photo 7</div>
-      <label>Image <input type="file" id="photo7" accept="image/*" /></label>
-      <label>Description (required if photo is added) <textarea id="photoDesc7"></textarea></label>
+  <section class="card">
+    <h2><span class="stub">08</span> Work photos <span class="opt">up to 10</span></h2>
+    <div class="body">
+      <button type="button" class="addbtn" id="btnAddPhoto">＋ Add photos</button>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
+      <div id="photoList"></div>
+      <p class="pcount" id="photoCount">0 of 10 photos · every photo needs a description</p>
     </div>
+  </section>
 
-    <div class="photo-block">
-      <div class="photo-block-title">Photo 8</div>
-      <label>Image <input type="file" id="photo8" accept="image/*" /></label>
-      <label>Description (required if photo is added) <textarea id="photoDesc8"></textarea></label>
+  <section class="card">
+    <h2><span class="stub">09</span> Client sign-off</h2>
+    <div class="body">
+      <label class="waive"><input type="checkbox" id="fNoRep"> No client representative on site today</label>
+      <div id="signBlock">
+        <div class="row2">
+          <div>
+            <label class="f" for="fSignName">Name</label>
+            <input type="text" id="fSignName" placeholder="Client representative">
+          </div>
+          <div>
+            <label class="f" for="fSignEmail">Email</label>
+            <input type="text" id="fSignEmail" inputmode="email" placeholder="name@company.com.au">
+          </div>
+        </div>
+        <label class="f">Signature — confirms works &amp; quantities as recorded</label>
+        <canvas id="sigPad"></canvas>
+        <div class="sigrow">
+          <span class="hint">Sign with finger or stylus</span>
+          <button type="button" class="rm" id="sigClear">Clear</button>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="photo-block">
-      <div class="photo-block-title">Photo 9</div>
-      <label>Image <input type="file" id="photo9" accept="image/*" /></label>
-      <label>Description (required if photo is added) <textarea id="photoDesc9"></textarea></label>
-    </div>
+</main>
 
-    <div class="photo-block">
-      <div class="photo-block-title">Photo 10</div>
-      <label>Image <input type="file" id="photo10" accept="image/*" /></label>
-      <label>Description (required if photo is added) <textarea id="photoDesc10"></textarea></label>
-    </div>
-  </fieldset>
+<div class="bar">
+  <div class="wrap">
+    <div class="state" id="stateMsg"></div>
+    <button id="btnPdf" type="button">Download PDF</button>
+    <button id="btnSend" type="button">Send to client</button>
+  </div>
+</div>
 
-  <button type="button" id="generateBtn">Generate PDF</button>
-</form>
-
-<!-- jsPDF from CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<div class="toast" id="toast"></div>
 
 <script>
-// ---------- Helpers ----------
-function readFileAsDataURL(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = e => resolve(e.target.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
+const LOGO_B64 = "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";
+
+/* ============================================================
+   FORESTME DAILY SITE REPORT — CONFIG (the only bit you edit)
+   ============================================================ */
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxBXWXpuP34PLsyu7QdKqBH22itwDSBDXBxrSeMQL6LTrX3FiS_22IiEYtv39bkoDPF/exec';
+
+// ↓↓↓ THE ONLY EDIT YOU MAKE ↓↓↓
+// Double-click the word  CHANGEME  below and type your secret phrase in its place.
+// Keep the two straight quotes around it. Example:  const SECRET = 'my-secret-phrase';
+const SECRET   = 'CHANGEME';
+// ↑↑↑ THE ONLY EDIT YOU MAKE ↑↑↑
+
+// Routing: the report is emailed to the address the client enters at sign-off,
+// with Michael CC'd. If "no client rep on site" is ticked, it goes to Michael only.
+
+const QTY_START_ROWS = 6;   // shown on load; "+ Add row" appends more, no limit
+
+const TAKE5 = [
+  'SWMS read, signed and current for today\u2019s tasks',
+  'Correct PPE worn by all crew (boots, hi-vis, gloves, eyes)',
+  'Sun protection in place and drinking water available',
+  'Crew fit for work \u2014 fatigue and heat considered',
+  'Terrain assessed \u2014 trip hazards, holes, steep or loose ground',
+  'Snakes, spiders and biting insects discussed',
+  'Weather checked and safe to work',
+  'Underground and overhead services identified before digging',
+  'Tools and equipment inspected and in good condition',
+  'Machinery and vehicle movement zones identified',
+  'Manual handling assessed \u2014 safe lifting of stock and materials',
+  'First aid kit on site and first aider identified',
+  'Phone coverage or comms method confirmed',
+  'Emergency assembly point and access route known by all crew',
+  'Public, traffic and other contractors considered',
+];
+
+const XHR_TYPES = ['Stand-down', 'Labour', 'Induction'];
+
+const MAX_PHOTOS = 10, PHOTO_MAX_DIM = 1600, PHOTO_QUALITY = 0.72;
+const BRAND = { g900:[0,66,37], g700:[45,106,79], g100:[216,239,227], ink:[26,43,34] };
+/* ============================== end config ============================== */
+
+const $ = id => document.getElementById(id);
+const photos = [];   // {dataUrl, desc, w, h}
+let take5Answers = new Array(TAKE5.length).fill(null);
+
+/* ---------- build UI ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  $('logoImg').src = 'data:image/png;base64,' + LOGO_B64;
+  $('fDate').value = new Date().toISOString().slice(0, 10);
+
+  initSigPad();
+  $('fNoRep').onchange = () => {
+    $('signBlock').classList.toggle('off', $('fNoRep').checked);
+    refresh();
+  };
+
+  const t5 = $('take5');
+  TAKE5.forEach((q, i) => {
+    const row = document.createElement('div'); row.className = 't5';
+    row.innerHTML = `<div class="q">${i + 1}. ${q}</div>
+      <div class="yn"><button type="button" class="yes">Yes</button><button type="button" class="no">No</button></div>`;
+    const [yes, no] = row.querySelectorAll('button');
+    yes.onclick = () => { take5Answers[i] = 'Yes'; yes.classList.add('on'); no.classList.remove('on'); refresh(); };
+    no.onclick  = () => { take5Answers[i] = 'No';  no.classList.add('on');  yes.classList.remove('on'); refresh(); };
+    t5.appendChild(row);
   });
+
+  const qb = $('qtyBody');
+  for (let i = 0; i < QTY_START_ROWS; i++) qb.appendChild(qtyRow());
+  $('btnAddQty').onclick = () => {
+    const r = qtyRow(); qb.appendChild(r);
+    r.querySelector('.q-name').focus();
+  };
+
+  addIssue();
+  $('btnAddIssue').onclick = () => addIssue(true);
+
+  addXhr();
+  $('btnAddXhr').onclick = () => addXhr(true);
+
+  $('btnAddPhoto').onclick = () => $('fileInput').click();
+  $('fileInput').onchange = handleFiles;
+  $('btnPdf').onclick = () => finalise(false);
+  $('btnSend').onclick = () => finalise(true);
+
+  document.body.addEventListener('input', refresh);
+  refresh();
+});
+
+function xhrHours(from, to) {
+  if (!from || !to) return null;
+  const [fh, fm] = from.split(':').map(Number), [th, tm] = to.split(':').map(Number);
+  return Math.round((((th * 60 + tm) - (fh * 60 + fm) + 1440) % 1440) / 60 * 100) / 100;
 }
 
-function loadImage(src) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = src;
-  });
+function addXhr(focus) {
+  const box = $('xhrs');
+  const n = box.children.length + 1;
+  const d = document.createElement('div'); d.className = 'issue';
+  d.innerHTML = `<span class="tag">ENTRY ${n} <span class="x-hrs"></span></span>
+    <div class="row3">
+      <div><label class="f">Type</label>
+        <select class="x-type"><option value="">Select…</option>${XHR_TYPES.map(t => `<option>${t}</option>`).join('')}</select></div>
+      <div><label class="f">From</label><input type="time" class="x-from"></div>
+      <div><label class="f">To</label><input type="time" class="x-to"></div>
+    </div>
+    <label class="f">Reason</label>
+    <input type="text" class="x-reason" placeholder="e.g. waiting on plant delivery / unloading plants and materials / etc.">
+    <label class="f">Description — what happened, who approved it</label>
+    <input type="text" class="x-desc" placeholder="e.g. Truck 2 hrs late from nursery, stood down by Dave M">`;
+  const upd = () => {
+    const h = xhrHours(d.querySelector('.x-from').value, d.querySelector('.x-to').value);
+    d.querySelector('.x-hrs').textContent = h !== null ? `\u00b7 ${h.toFixed(2)} hrs` : '';
+  };
+  d.querySelector('.x-from').addEventListener('input', upd);
+  d.querySelector('.x-to').addEventListener('input', upd);
+  box.appendChild(d);
+  if (focus) d.querySelector('.x-type').focus();
 }
 
-async function processImageToPortrait(file) {
-  const dataUrl = await readFileAsDataURL(file);
-  const img = await loadImage(dataUrl);
+function addIssue(focus) {
+  const iss = $('issues');
+  const n = iss.children.length + 1;
+  const d = document.createElement('div'); d.className = 'issue';
+  d.innerHTML = `<span class="tag">ISSUE ${n}</span>
+    <label class="f">What happened</label><input type="text" class="i-what">
+    <label class="f">Impact</label><input type="text" class="i-impact">
+    <label class="f">What\u2019s needed</label><input type="text" class="i-need">`;
+  iss.appendChild(d);
+  if (focus) d.querySelector('.i-what').focus();
+}
 
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
+function qtyRow() {
+  const tr = document.createElement('tr');
+  tr.innerHTML =
+    `<td class="item"><input type="text" class="q-name" placeholder="e.g. Tubestock 150mm — Lomandra"></td>
+     <td class="n"><input type="number" class="q-val" min="0" inputmode="numeric"></td>
+     <td><input type="text" class="q-note" placeholder="e.g. Mulch, semi-compacted soil"></td>`;
+  return tr;
+}
 
-  if (img.width > img.height) {
-    canvas.width = img.height;
-    canvas.height = img.width;
-    ctx.translate(0, canvas.height);
-    ctx.rotate(-Math.PI / 2);
-    ctx.drawImage(img, 0, 0);
-  } else {
-    canvas.width = img.width;
-    canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
+/* ---------- photos ---------- */
+async function handleFiles(e) {
+  const files = [...e.target.files];
+  e.target.value = '';
+  for (const f of files) {
+    if (photos.length >= MAX_PHOTOS) { toast(`Limit is ${MAX_PHOTOS} photos`, true); break; }
+    try {
+      const p = await compressImage(f);
+      photos.push({ ...p, desc: '' });
+      renderPhoto(photos.length - 1);
+    } catch (err) {
+      toast('Couldn\u2019t read that photo \u2014 try a JPG or take it with the camera', true);
+    }
   }
+  refresh();
+}
 
-  const portraitDataUrl = canvas.toDataURL("image/jpeg");
+async function compressImage(file, maxDim = PHOTO_MAX_DIM, quality = PHOTO_QUALITY) {
+  const img = await createImageBitmap(file);
+  const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.round(img.width * scale);
+  canvas.height = Math.round(img.height * scale);
+  canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+  img.close();
+  return { dataUrl: canvas.toDataURL('image/jpeg', quality), w: canvas.width, h: canvas.height };
+}
+
+function renderPhoto(idx) {
+  const d = document.createElement('div'); d.className = 'ph'; d.dataset.idx = idx;
+  d.innerHTML = `<img src="${photos[idx].dataUrl}" alt="">
+    <div class="pd"><textarea placeholder="Describe this photo (required) — what, where"></textarea>
+    <button type="button" class="rm">Remove</button></div>`;
+  d.querySelector('textarea').oninput = ev => { photos[idx].desc = ev.target.value; };
+  d.querySelector('.rm').onclick = () => { photos[idx] = null; d.remove(); refresh(); };
+  $('photoList').appendChild(d);
+}
+
+/* ---------- signature pad ---------- */
+let sigDrawn = false, sigCtx = null;
+function initSigPad() {
+  const c = $('sigPad');
+  const size = () => {
+    if (sigDrawn) return;                       // don't wipe a signature on rotate
+    const dpr = window.devicePixelRatio || 1;
+    c.width = c.clientWidth * dpr; c.height = c.clientHeight * dpr;
+    sigCtx = c.getContext('2d');
+    sigCtx.scale(dpr, dpr);
+    sigCtx.lineWidth = 2.2; sigCtx.lineCap = 'round'; sigCtx.lineJoin = 'round';
+    sigCtx.strokeStyle = '#1A2B22';
+  };
+  size(); window.addEventListener('resize', size);
+  let down = false;
+  const pos = e => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  c.addEventListener('pointerdown', e => { down = true; c.setPointerCapture(e.pointerId);
+    const [x, y] = pos(e); sigCtx.beginPath(); sigCtx.moveTo(x, y); });
+  c.addEventListener('pointermove', e => { if (!down) return;
+    const [x, y] = pos(e); sigCtx.lineTo(x, y); sigCtx.stroke(); sigDrawn = true; refresh(); });
+  c.addEventListener('pointerup', () => down = false);
+  $('sigClear').onclick = () => {
+    sigCtx.clearRect(0, 0, c.width, c.height); sigDrawn = false; refresh();
+  };
+}
+function sigDataUrl() {
+  const c = $('sigPad');
+  const out = document.createElement('canvas');
+  out.width = c.width; out.height = c.height;
+  const ctx = out.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, out.width, out.height);
+  ctx.drawImage(c, 0, 0);
+  return out.toDataURL('image/png');
+}
+
+/* ---------- validation & state ---------- */
+function gather() {
+  const qty = [];
+  document.querySelectorAll('#qtyBody tr').forEach(tr => {
+    const name = tr.querySelector('.q-name').value.trim();
+    const val = tr.querySelector('.q-val').value;
+    const note = tr.querySelector('.q-note').value.trim();
+    if (name && val !== '' && Number(val) > 0) qty.push([name, val, note]);
+  });
+  const issues = [];
+  document.querySelectorAll('.issue .i-what').forEach(el => {
+    const d = el.closest('.issue');
+    const what = el.value.trim();
+    if (what) issues.push([what, d.querySelector('.i-impact').value.trim(), d.querySelector('.i-need').value.trim()]);
+  });
+  const xhrs = [], xhrsIncomplete = [];
+  document.querySelectorAll('#xhrs .issue').forEach((d, i) => {
+    const type = d.querySelector('.x-type').value, from = d.querySelector('.x-from').value,
+          to = d.querySelector('.x-to').value, reason = d.querySelector('.x-reason').value.trim(),
+          desc = d.querySelector('.x-desc').value.trim();
+    const touched = type || from || to || reason || desc;
+    if (!touched) return;
+    if (type && from && to && reason && desc) xhrs.push([type, from, to, xhrHours(from, to), reason, desc]);
+    else xhrsIncomplete.push(i + 1);
+  });
   return {
-    url: portraitDataUrl,
-    type: "image/jpeg",
-    width: canvas.width,
-    height: canvas.height
+    client: $('fClient').value.trim(),
+    project: $('fProject').value.trim(),
+    contactName: $('fContactName').value.trim(),
+    contactNum: $('fContactNum').value.trim(),
+    noRep: $('fNoRep').checked,
+    signName: $('fSignName').value.trim(),
+    signEmail: $('fSignEmail').value.trim(),
+    date: $('fDate').value, superv: $('fSuper').value.trim(),
+    crew: $('fCrew').value, weather: $('fWeather').value,
+    start: $('fStart').value, finish: $('fFinish').value,
+    hazards: $('fHazards').value.trim(), works: $('fWorks').value.trim(),
+    notes: $('fNotes').value.trim(), qty, issues, xhrs, xhrsIncomplete,
+    photos: photos.filter(Boolean),
   };
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("generateBtn");
+function problems(d) {
+  const p = [];
+  if (!d.client) p.push('client name');
+  if (!d.project) p.push('site/project name');
+  if (!d.contactName) p.push('site contact name');
+  if (!d.contactNum) p.push('site contact number');
+  if (!d.date) p.push('date');
+  if (!d.superv) p.push('team leader');
+  if (!d.crew) p.push('crew size');
+  if (!d.weather) p.push('weather');
+  if (!d.start || !d.finish) p.push('on/off site times');
+  const unanswered = take5Answers.filter(a => a === null).length;
+  if (unanswered) p.push(`${unanswered} Take 5 check${unanswered > 1 ? 's' : ''}`);
+  if (!d.works) p.push('works completed');
+  if (d.xhrsIncomplete.length) p.push(`extra hours entry ${d.xhrsIncomplete.join(', ')} (times + reason + description)`);
+  const noDesc = d.photos.filter(ph => !ph.desc.trim()).length;
+  if (noDesc) p.push(`${noDesc} photo description${noDesc > 1 ? 's' : ''}`);
+  if (!d.noRep) {
+    if (!d.signName) p.push('sign-off name');
+    if (!/.+@.+\..+/.test(d.signEmail)) p.push('sign-off email');
+    if (!sigDrawn) p.push('signature');
+  }
+  return p;
+}
 
-  btn.addEventListener("click", async () => {
-    if (!window.jspdf || !window.jspdf.jsPDF) {
-      alert("PDF library failed to load. Please check your internet connection and reload this page.");
-      console.error("window.jspdf is", window.jspdf);
-      return;
+function refresh() {
+  const d = gather();
+  const p = problems(d);
+  const live = photos.filter(Boolean).length;
+  $('photoCount').textContent = `${live} of ${MAX_PHOTOS} photos \u00b7 every photo needs a description`;
+  const s = $('stateMsg');
+  if (p.length) {
+    s.className = 'state';
+    s.textContent = 'Still needed: ' + p.join(', ');
+    $('btnSend').disabled = true; $('btnPdf').disabled = true;
+  } else {
+    s.className = 'state ok';
+    s.textContent = 'Report complete \u2014 ready to send';
+    $('btnSend').disabled = false; $('btnPdf').disabled = false;
+  }
+}
+
+/* ---------- PDF ---------- */
+function fmtDate(iso) { const [y, m, dd] = iso.split('-'); return `${dd}-${m}-${y}`; }
+
+async function buildPdf(d) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const W = 210, M = 14; let y;
+
+  // header
+  doc.addImage('data:image/png;base64,' + LOGO_B64, 'PNG', M, 10, 48, 12);
+  doc.setFont('times', 'bold'); doc.setFontSize(17); doc.setTextColor(...BRAND.g900);
+  doc.text('Daily Site Report', W - M, 15, { align: 'right' });
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...BRAND.g700);
+  doc.text(`${d.client}  \u00b7  ${d.project}  \u00b7  ${fmtDate(d.date)}`, W - M, 20.5, { align: 'right' });
+  doc.setDrawColor(...BRAND.g900); doc.setLineWidth(1); doc.line(M, 25, W - M, 25);
+  y = 31;
+
+  const H = t => { doc.setFont('times', 'bold'); doc.setFontSize(12); doc.setTextColor(...BRAND.g900);
+    doc.text(t, M, y); doc.setDrawColor(...BRAND.g100); doc.setLineWidth(.4);
+    doc.line(M, y + 1.5, W - M, y + 1.5); y += 6; };
+  const P = (t, size = 9.5) => { doc.setFont('helvetica', 'normal'); doc.setFontSize(size); doc.setTextColor(...BRAND.ink);
+    const lines = doc.splitTextToSize(t, W - 2 * M); doc.text(lines, M, y); y += lines.length * (size * .46) + 3; };
+  const room = need => { if (y + need > 283) { doc.addPage(); y = 16; } };
+  const table = (head, body, widths) => {
+    doc.autoTable({ startY: y, margin: { left: M, right: M }, head: [head], body,
+      styles: { font: 'helvetica', fontSize: 8.5, textColor: BRAND.ink, cellPadding: 1.6 },
+      headStyles: { fillColor: BRAND.g900, textColor: 255, fontStyle: 'bold', fontSize: 8.5 },
+      alternateRowStyles: { fillColor: [246, 251, 248] }, columnStyles: widths });
+    y = doc.lastAutoTable.finalY + 7;
+  };
+
+  H('Job details');
+  table(['Client', 'Site / project', 'Site contact', 'Contact number'],
+        [[d.client, d.project, d.contactName, d.contactNum]], {});
+  y -= 4;
+  table(['Team leader', 'Crew size', 'Weather', 'On site', 'Off site'],
+        [[d.superv, d.crew, d.weather, d.start, d.finish]], {});
+
+  room(70);
+  H('Take 5 safety check');
+  table(['#', 'Check', 'Answer'],
+        TAKE5.map((q, i) => [i + 1, q, take5Answers[i]]),
+        { 0: { cellWidth: 8 }, 2: { cellWidth: 18 } });
+  if (d.hazards) { room(20); P('Hazard notes: ' + d.hazards); }
+
+  // page 2: all work-related content
+  doc.addPage(); y = 16;
+
+  if (d.qty.length) { room(40); H('Quantities & outputs');
+    table(['Stock & size', 'Qty', 'Ground cover & conditions'], d.qty, { 1: { cellWidth: 18 } }); }
+
+  if (d.xhrs.length) {
+    room(45); H('Extra hours — stand-down, labour & inductions');
+    const total = d.xhrs.reduce((s, r) => s + (r[3] || 0), 0);
+    doc.autoTable({ startY: y, margin: { left: M, right: M },
+      head: [['Type', 'From', 'To', 'Hrs', 'Reason', 'Description']],
+      body: d.xhrs.map(r => [r[0], r[1], r[2], r[3].toFixed(2), r[4], r[5]]),
+      foot: [['Total', '', '', total.toFixed(2), '', '']],
+      styles: { font: 'helvetica', fontSize: 8.5, textColor: BRAND.ink, cellPadding: 1.6 },
+      headStyles: { fillColor: BRAND.g900, textColor: 255, fontStyle: 'bold', fontSize: 8.5 },
+      footStyles: { fillColor: BRAND.g100, textColor: BRAND.ink, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [246, 251, 248] },
+      columnStyles: { 1: { cellWidth: 14 }, 2: { cellWidth: 14 }, 3: { cellWidth: 12 } } });
+    y = doc.lastAutoTable.finalY + 7;
+  }
+
+  room(30); H('Works completed'); P(d.works);
+
+  if (d.issues.length) { room(35); H('Issues & actions');
+    table(['What happened', 'Impact', 'What\u2019s needed'], d.issues, {}); }
+
+  if (d.notes) { room(25); H('Notes for client'); P(d.notes); }
+
+  // sign-off closes the work content
+  room(52); H('Client sign-off');
+  if (d.noRep) {
+    P('No client representative was on site today. Report submitted without client signature.');
+  } else {
+    const now = new Date();
+    const stamp = `${String(now.getDate()).padStart(2,'0')}-${String(now.getMonth()+1).padStart(2,'0')}-${now.getFullYear()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    doc.addImage(sigDataUrl(), 'PNG', M, y, 70, 24);
+    doc.setDrawColor(...BRAND.g700); doc.setLineWidth(.3); doc.line(M, y + 25, M + 70, y + 25);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...BRAND.ink);
+    doc.text(`${d.signName}  \u00b7  ${d.signEmail}`, M, y + 30);
+    doc.setFontSize(8); doc.setTextColor(...BRAND.g700);
+    doc.text(`Signed on device \u00b7 ${stamp} \u00b7 confirms works & quantities as recorded`, M, y + 35);
+    y += 42;
+  }
+
+  if (d.photos.length) {
+    doc.addPage(); y = 16;
+    H('Work photos');
+    const n = d.photos.length, rows = Math.ceil(n / 2);
+    const cw = (W - 2 * M - 6) / 2;
+    const cellH = Math.min((283 - y - 2) / rows, 88);   // grid always fits one page
+    const imgH = cellH - 11;
+    d.photos.forEach((ph, i) => {
+      const col = i % 2, row = Math.floor(i / 2);
+      const x = M + col * (cw + 6), py = y + row * cellH;
+      const scale = Math.min(cw / ph.w, imgH / ph.h);
+      const iw = ph.w * scale, ih = ph.h * scale;
+      doc.addImage(ph.dataUrl, 'JPEG', x + (cw - iw) / 2, py, iw, ih);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(...BRAND.g700);
+      const cap = doc.splitTextToSize(`${i + 1}. ${ph.desc}`, cw).slice(0, 2);
+      doc.text(cap, x, py + imgH + 3.5);
+    });
+    y += rows * cellH + 4;
+  }
+
+  // footer on every page
+  const pages = doc.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(...BRAND.g700);
+    doc.text(`Forestme \u00b7 Liquid Forest Pty Ltd \u00b7 ABN 43 654 122 317`, M, 292);
+    doc.text(`Page ${i} of ${pages}`, W - M, 292, { align: 'right' });
+  }
+  return doc;
+}
+
+/* ---------- finalise ---------- */
+async function finalise(send) {
+  const d = gather();
+  if (problems(d).length) return;
+  const btn = send ? $('btnSend') : $('btnPdf');
+  const was = btn.textContent;
+  btn.disabled = true; btn.textContent = send ? 'Sending\u2026' : 'Building\u2026';
+  try {
+    const doc = await buildPdf(d);
+    const fname = `Forestme Daily Report - ${d.project} - ${fmtDate(d.date)}.pdf`;
+    if (!send) { doc.save(fname); toast('PDF downloaded'); }
+    else {
+      const b64 = doc.output('datauristring').split(',')[1];
+      const res = await fetch(ENDPOINT, { method: 'POST',
+        body: JSON.stringify({
+          secret: SECRET, project: d.project, client: d.client, date: fmtDate(d.date),
+          clientEmail: d.noRep ? '' : d.signEmail, signName: d.signName, pdfBase64: b64 }) });
+      const out = await res.json();
+      if (out.status === 'ok') toast('Report sent \u2713 \u2014 copy is in the archive');
+      else toast('NOT sent: ' + out.msg, true);
     }
-    const { jsPDF } = window.jspdf;
+  } catch (err) {
+    toast('Something went wrong: ' + err.message, true);
+  }
+  btn.textContent = was; refresh();
+}
+
+function toast(msg, err) {
+  const t = $('toast');
+  t.textContent = msg; t.className = 'toast' + (err ? ' err' : '');
+  t.style.display = 'block';
+  clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 4200);
+}
 
-    const logoFile = document.getElementById("logoInput").files[0];
-    if (!logoFile) {
-      alert("Please select a logo file at the top of the form.");
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = "Generating...";
-
-    try {
-      // ---- Read form values ----
-      const clientName       = document.getElementById("clientName").value || "";
-      const projectName      = document.getElementById("projectName").value || "";
-      const location         = document.getElementById("location").value || "";
-
-      const rawDate          = document.getElementById("date").value || "";
-      let displayDate = "";
-      let fileDate = "";
-      if (rawDate) {
-        const parts = rawDate.split("-");
-        if (parts.length === 3) {
-          const [y, m, d] = parts;
-          displayDate = `${d}/${m}/${y}`;
-          fileDate = `${d}-${m}-${y}`;
-        } else {
-          displayDate = rawDate;
-          fileDate = rawDate;
-        }
-      } else {
-        const now = new Date();
-        const dd = String(now.getDate()).padStart(2,"0");
-        const mm = String(now.getMonth()+1).padStart(2,"0");
-        const yy = now.getFullYear();
-        displayDate = `${dd}/${mm}/${yy}`;
-        fileDate = `${dd}-${mm}-${yy}`;
-      }
-
-      const supervisor       = document.getElementById("supervisor").value || "";
-      const shortDescription = document.getElementById("shortDescription").value || "";
-
-      const objectives = [];
-      for (let i = 1; i <= 6; i++) {
-        objectives.push(document.getElementById(`objective${i}`).value || "");
-      }
-
-      const potentialIssuesList = [];
-      for (let i = 1; i <= 6; i++) {
-        potentialIssuesList.push(document.getElementById(`potentialIssue${i}`).value || "");
-      }
-
-      // ---- Safety Report ----
-      const safetyResponses = [];
-      document.querySelectorAll("#safetyTable tbody tr").forEach(row => {
-        const questionCell = row.querySelector("td");
-        const question = questionCell ? questionCell.innerText.trim() : "";
-        const yes = row.querySelector('input[type="radio"][value="Yes"]:checked');
-        const no  = row.querySelector('input[type="radio"][value="No"]:checked');
-        let answer = "-";
-        if (yes) answer = "Yes";
-        else if (no) answer = "No";
-        safetyResponses.push({ question, answer });
-      });
-      const safetyNotes = document.getElementById("safetyNotes").value || "";
-
-      const startTime  = document.getElementById("startTime").value || "";
-      const finishTime = document.getElementById("finishTime").value || "";
-
-      const worksCompletedToday = document.getElementById("worksCompletedToday").value || "";
-      const notesForClient      = document.getElementById("notesForClient").value || "";
-
-      // Challenges & Solutions rows
-      const challengeRows = [];
-      document.querySelectorAll("#challengeTable tbody tr").forEach(row => {
-        const challenge = row.querySelector(".challenge-text").value.trim();
-        const solution  = row.querySelector(".solution-text").value.trim();
-        if (challenge || solution) {
-          challengeRows.push({ challenge, solution });
-        }
-      });
-
-      // Quantities rows
-      const qtyRows = [];
-      document.querySelectorAll("#qtyTable tbody tr").forEach(row => {
-        const unit = row.querySelector(".qty-unit").value.trim();
-        const amount = row.querySelector(".qty-amount").value.trim();
-        const cond = row.querySelector(".qty-conditions").value.trim();
-        if (unit || amount || cond) {
-          qtyRows.push({ unit, amount, cond });
-        }
-      });
-
-      // Photos (10 slots)
-      const photoSlots = [];
-      for (let i = 1; i <= 10; i++) {
-        const fileInput = document.getElementById(`photo${i}`);
-        const descInput = document.getElementById(`photoDesc${i}`);
-        const file = fileInput.files[0];
-        const desc = (descInput.value || "").trim();
-
-        if (file) {
-          if (!desc) {
-            alert(`Please add a description for Photo ${i}.`);
-            btn.disabled = false;
-            btn.textContent = "Generate PDF";
-            return;
-          }
-          photoSlots.push({ file, desc });
-        }
-      }
-
-      // ---- Setup PDF ----
-      const doc    = new jsPDF({ unit: "mm", format: "a4" });
-      const margin = 15;
-      const pageWidth  = doc.internal.pageSize.getWidth();
-      const pageHeight = doc.internal.pageSize.getHeight();
-      let y = margin;
-
-      // Font sizes
-      const FONT_TITLE   = 14;
-      const FONT_SECTION = 11;
-      const FONT_BODY    = 9;
-      const FONT_LABEL   = 9;
-      const FONT_TABLE   = 8;
-      const FONT_FOOTER  = 8;
-      const LINE_HEIGHT_BODY  = 4;
-      const LINE_HEIGHT_TABLE = 4;
-
-      function ensureSpace(extraHeight = 20) {
-        if (y + extraHeight > pageHeight - 15) {
-          doc.addPage();
-          y = margin;
-        }
-      }
-
-      function addSectionTitle(title) {
-        y += 5;
-        ensureSpace(12);
-        doc.setFont("courier", "bold");
-        doc.setFontSize(FONT_SECTION);
-        doc.text(title, margin, y);
-        y += 6;
-      }
-
-      function addLabeledBox(label, value) {
-        const width = pageWidth - 2 * margin;
-        const text = (value && value.trim()) ? value : "-";
-
-        doc.setFont("courier", "normal");
-        doc.setFontSize(FONT_BODY);
-
-        const innerWidth = width - 8;
-        const lines = doc.splitTextToSize(text, innerWidth);
-        const lineHeight = LINE_HEIGHT_BODY;
-
-        const minBoxHeight = 14;
-        const contentHeight = lines.length * lineHeight;
-        const boxHeight = Math.max(minBoxHeight, contentHeight + 6);
-
-        ensureSpace(boxHeight + 10);
-
-        doc.setFont("courier", "bold");
-        doc.setFontSize(FONT_LABEL);
-        doc.text(label, margin, y);
-        y += 3.5;
-
-        const boxY = y;
-        doc.setDrawColor(200, 200, 200);
-        doc.setFillColor(250, 250, 250);
-        doc.roundedRect(margin, boxY, width, boxHeight, 2, 2, "FD");
-
-        const textBlockHeight = lines.length * lineHeight;
-        const verticalPadding = (boxHeight - textBlockHeight) / 2;
-
-        doc.setFont("courier", "normal");
-        doc.setFontSize(FONT_BODY);
-        doc.text(lines, margin + 4, boxY + verticalPadding + lineHeight * 0.75);
-
-        y += boxHeight + 5;
-
-        doc.setDrawColor(0, 0, 0);
-        doc.setFillColor(255, 255, 255);
-      }
-
-      // Numbered list that only shows filled rows
-      function addNumberedList(label, valuesArray) {
-        const filtered = valuesArray
-          .map(v => (v || "").trim())
-          .filter(v => v.length > 0);
-
-        if (filtered.length === 0) return;
-
-        const width = pageWidth - 2 * margin;
-        const rowHeight = 5;
-        const boxHeight = filtered.length * rowHeight + 6;
-
-        ensureSpace(boxHeight + 10);
-
-        doc.setFont("courier", "bold");
-        doc.setFontSize(FONT_LABEL);
-        doc.text(label, margin, y);
-        y += 3.5;
-
-        const boxY = y;
-        doc.setDrawColor(200, 200, 200);
-        doc.setFillColor(250, 250, 250);
-        doc.roundedRect(margin, boxY, width, boxHeight, 2, 2, "FD");
-
-        doc.setFont("courier", "normal");
-        doc.setFontSize(FONT_BODY);
-
-        let lineY = boxY + 7;
-        filtered.forEach((text, index) => {
-          doc.text(`${index + 1}.`, margin + 4, lineY);
-          doc.text(text, margin + 14, lineY);
-          lineY += rowHeight;
-        });
-
-        y += boxHeight + 5;
-
-        doc.setDrawColor(0, 0, 0);
-        doc.setFillColor(255, 255, 255);
-      }
-
-      function addSafetySection(safetyResponses, safetyNotes) {
-        addSectionTitle("Safety Report – Take 5");
-
-        const colYesWidth = 8;
-        const colNoWidth  = 8;
-        const colQWidth   = pageWidth - 2 * margin - colYesWidth - colNoWidth;
-
-        const colYesX = margin;
-        const colNoX  = margin + colYesWidth;
-        const colQX   = margin + colYesWidth + colNoWidth;
-
-        const headerHeight = 6;
-        ensureSpace(headerHeight + 4);
-
-        const totalWidth = colYesWidth + colNoWidth + colQWidth;
-
-        // Header row with green fill and straight corners
-        doc.setDrawColor(180, 180, 180);
-        doc.setFillColor(230, 242, 236);
-        doc.rect(colYesX, y, totalWidth, headerHeight, "FD");
-
-        doc.setDrawColor(180, 180, 180);
-        doc.line(colNoX, y, colNoX, y + headerHeight);
-        doc.line(colQX,  y, colQX,  y + headerHeight);
-
-        doc.setFont("courier", "bold");
-        doc.setFontSize(FONT_TABLE);
-        doc.setTextColor(0, 0, 0);
-        const headerCenterY = y + headerHeight / 2 + 1;
-        doc.text("Yes", colYesX + 2, headerCenterY);
-        doc.text("No",  colNoX  + 2, headerCenterY);
-        doc.text("Question", colQX + 2, headerCenterY);
-
-        y += headerHeight;
-
-        // Body rows with straight-corner cells
-        doc.setFont("courier", "normal");
-        doc.setFontSize(FONT_TABLE);
-        doc.setDrawColor(200, 200, 200);
-        doc.setFillColor(255, 255, 255);
-
-        safetyResponses.forEach((item) => {
-          const qText = item.question || "";
-          const qLines = doc.splitTextToSize(qText, colQWidth - 4);
-          const lineCount = Math.max(1, qLines.length);
-          const rowHeight = lineCount * LINE_HEIGHT_TABLE + 2;
-
-          ensureSpace(rowHeight + 2);
-
-          doc.rect(colYesX, y, colYesWidth, rowHeight);
-          doc.rect(colNoX,  y, colNoWidth,  rowHeight);
-          doc.rect(colQX,   y, colQWidth,   rowHeight);
-
-          const boxSize = 3.5;
-          const yesBoxX = colYesX + (colYesWidth - boxSize) / 2;
-          const noBoxX  = colNoX  + (colNoWidth  - boxSize) / 2;
-          const boxY    = y + (rowHeight - boxSize) / 2;
-
-          doc.rect(yesBoxX, boxY, boxSize, boxSize);
-          doc.rect(noBoxX,  boxY, boxSize, boxSize);
-
-          if (item.answer === "Yes") {
-            doc.text("X", yesBoxX + 1, boxY + boxSize - 0.5);
-          } else if (item.answer === "No") {
-            doc.text("X", noBoxX + 1, boxY + boxSize - 0.5);
-          }
-
-          const lineCountEff = Math.max(1, qLines.length);
-          const textBlockHeight = lineCountEff * LINE_HEIGHT_TABLE;
-          const baseY = y + (rowHeight - textBlockHeight) / 2 + LINE_HEIGHT_TABLE * 0.75;
-
-          doc.text(qLines, colQX + 2, baseY);
-
-          y += rowHeight;
-        });
-
-        // Extra gap before Additional Safety Notes
-        y += 7;
-
-        addLabeledBox("Additional Safety Notes", safetyNotes);
-      }
-
-      // ---- Logo ----
-      const logoDataUrl = await readFileAsDataURL(logoFile);
-      const logoImg = await loadImage(logoDataUrl);
-      const maxLogoWidth = 80;
-      const aspect = logoImg.height / logoImg.width;
-      const logoWidth = Math.min(maxLogoWidth, pageWidth - 2 * margin);
-      const logoHeight = logoWidth * aspect;
-      const logoX = (pageWidth - logoWidth) / 2;
-      const logoFormat = logoFile.type === "image/png" ? "PNG" : "JPEG";
-      doc.addImage(logoDataUrl, logoFormat, logoX, y, logoWidth, logoHeight);
-      y += logoHeight + 8;
-
-      // Title
-      doc.setFont("courier", "bold");
-      doc.setFontSize(FONT_TITLE);
-      doc.text("Daily Site Report", pageWidth / 2, y, { align: "center" });
-      y += 8;
-
-      // ---- Job Details (Page 1) ----
-      addSectionTitle("Job Details");
-      addLabeledBox("Client Name",         clientName);
-      addLabeledBox("Project / Site Name", projectName);
-      addLabeledBox("Location",            location);
-      addLabeledBox("Date",                displayDate);
-      addLabeledBox("Supervisor",          supervisor);
-
-      // ---- Job Description (Page 1) ----
-      addSectionTitle("Job Description");
-      addLabeledBox("Short Description", shortDescription);
-      addNumberedList("Today's Objectives", objectives);
-      addNumberedList("Potential Issues",  potentialIssuesList);
-
-      // ---- Safety ----
-      addSafetySection(safetyResponses, safetyNotes);
-
-      // ---- PAGE 2+: Quantities & Outputs + Work Summary ----
-      doc.addPage();
-      y = margin;
-
-      // ---- Quantities & Outputs ----
-      if (qtyRows.length > 0) {
-        addSectionTitle("Quantities & Outputs");
-
-        const col1Width = 50;
-        const col2Width = 25;
-        const col3Width = pageWidth - margin - (margin + col1Width + col2Width);
-
-        const col1X = margin;
-        const col2X = margin + col1Width;
-        const col3X = margin + col1Width + col2Width;
-
-        const headerHeight = 7;
-        ensureSpace(headerHeight + 4);
-
-        const totalWidthQ = col1Width + col2Width + col3Width;
-
-        // Header with green fill, straight corners
-        doc.setFont("courier", "bold");
-        doc.setFontSize(FONT_TABLE);
-        doc.setDrawColor(180, 180, 180);
-        doc.setFillColor(230, 242, 236);
-        doc.rect(col1X, y, totalWidthQ, headerHeight, "FD");
-        doc.setDrawColor(180, 180, 180);
-        doc.line(col2X, y, col2X, y + headerHeight);
-        doc.line(col3X, y, col3X, y + headerHeight);
-
-        const headerCenterYQ = y + headerHeight / 2 + 1;
-        doc.setTextColor(0, 0, 0);
-        doc.text("Unit Type", col1X + 2, headerCenterYQ);
-        doc.text("Amount",    col2X + 2, headerCenterYQ);
-        doc.text("Conditions / Reasons", col3X + 2, headerCenterYQ);
-
-        y += headerHeight;
-
-        doc.setFont("courier", "normal");
-        doc.setFontSize(FONT_TABLE);
-        doc.setDrawColor(200, 200, 200);
-        doc.setFillColor(255, 255, 255);
-
-        qtyRows.forEach(row => {
-          const unitText   = row.unit || "-";
-          const amountText = row.amount || "-";
-          const condText   = row.cond || "-";
-
-          const unitLines   = doc.splitTextToSize(unitText,   col1Width - 4);
-          const amountLines = doc.splitTextToSize(amountText, col2Width - 4);
-          const condLines   = doc.splitTextToSize(condText,   col3Width - 4);
-
-          const lineCount = Math.max(unitLines.length, amountLines.length, condLines.length);
-          const rowHeight = lineCount * LINE_HEIGHT_TABLE + 2;
-
-          ensureSpace(rowHeight + 2);
-
-          doc.rect(col1X, y, col1Width, rowHeight);
-          doc.rect(col2X, y, col2Width, rowHeight);
-          doc.rect(col3X, y, col3Width, rowHeight);
-
-          const unitBlockHeight   = unitLines.length   * LINE_HEIGHT_TABLE;
-          const amountBlockHeight = amountLines.length * LINE_HEIGHT_TABLE;
-          const condBlockHeight   = condLines.length   * LINE_HEIGHT_TABLE;
-
-          const unitBaseY   = y + (rowHeight - unitBlockHeight)   / 2 + LINE_HEIGHT_TABLE * 0.75;
-          const amountBaseY = y + (rowHeight - amountBlockHeight) / 2 + LINE_HEIGHT_TABLE * 0.75;
-          const condBaseY   = y + (rowHeight - condBlockHeight)   / 2 + LINE_HEIGHT_TABLE * 0.75;
-
-          doc.text(unitLines,   col1X + 2, unitBaseY);
-          doc.text(amountLines, col2X + 2, amountBaseY);
-          doc.text(condLines,   col3X + 2, condBaseY);
-
-          y += rowHeight;
-        });
-
-        y += 3;
-      }
-
-      // ---- Work Summary ----
-      addSectionTitle("Work Summary");
-      addLabeledBox("Start Time", startTime);
-      addLabeledBox("Finish Time", finishTime);
-      addLabeledBox("What works were completed today?", worksCompletedToday);
-
-      if (challengeRows.length > 0) {
-        ensureSpace(10);
-        doc.setFont("courier", "bold");
-        doc.setFontSize(FONT_TABLE);
-        doc.text("Challenges & Solutions", margin, y);
-        y += 4.5;
-
-        const tableWidth = pageWidth - 2 * margin;
-        const col1Width = tableWidth * 0.5;
-        const col2Width = tableWidth - col1Width;
-
-        const col1X = margin;
-        const col2X = margin + col1Width;
-
-        const headerHeight = 7;
-        ensureSpace(headerHeight + 4);
-
-        // Header with green fill
-        doc.setDrawColor(180, 180, 180);
-        doc.setFillColor(230, 242, 236);
-        doc.rect(col1X, y, tableWidth, headerHeight, "FD");
-        doc.setDrawColor(180, 180, 180);
-        doc.line(col2X, y, col2X, y + headerHeight);
-
-        const headerCenterY = y + headerHeight / 2 + 1;
-        doc.text("Challenges", col1X + 2, headerCenterY);
-        doc.text("Solutions",  col2X + 2, headerCenterY);
-
-        y += headerHeight;
-
-        doc.setFont("courier", "normal");
-        doc.setFontSize(FONT_TABLE);
-        doc.setDrawColor(200, 200, 200);
-        doc.setFillColor(255, 255, 255);
-
-        challengeRows.forEach(row => {
-          const chText = row.challenge || "-";
-          const solText = row.solution || "-";
-
-          const chLines  = doc.splitTextToSize(chText,  col1Width - 4);
-          const solLines = doc.splitTextToSize(solText, col2Width - 4);
-
-          const lineCount = Math.max(chLines.length, solLines.length);
-          const rowHeight = lineCount * LINE_HEIGHT_TABLE + 2;
-
-          ensureSpace(rowHeight + 2);
-
-          doc.rect(col1X, y, col1Width, rowHeight);
-          doc.rect(col2X, y, col2Width, rowHeight);
-
-          const chBlockHeight  = chLines.length * LINE_HEIGHT_TABLE;
-          const solBlockHeight = solLines.length * LINE_HEIGHT_TABLE;
-          const chBaseY  = y + (rowHeight - chBlockHeight)  / 2 + LINE_HEIGHT_TABLE * 0.75;
-          const solBaseY = y + (rowHeight - solBlockHeight) / 2 + LINE_HEIGHT_TABLE * 0.75;
-
-          doc.text(chLines,  col1X + 2, chBaseY);
-          doc.text(solLines, col2X + 2, solBaseY);
-
-          y += rowHeight;
-        });
-
-        // Extra gap before Notes for Client
-        y += 7;
-      }
-
-      addLabeledBox("Notes for Client", notesForClient);
-
-      // ---- Work Photos page ----
-      if (photoSlots.length > 0) {
-        const images = [];
-        for (const slot of photoSlots) {
-          try {
-            const img = await processImageToPortrait(slot.file);
-            images.push({
-              url: img.url,
-              type: img.type,
-              width: img.width,
-              height: img.height,
-              caption: slot.desc
-            });
-          } catch (e) {
-            console.error("Failed to process image", slot.file.name, e);
-          }
-        }
-
-        if (images.length > 0) {
-          doc.addPage();
-          const pW = doc.internal.pageSize.getWidth();
-          const pH = doc.internal.pageSize.getHeight();
-
-          const photosMargin  = margin;
-          let yPhotos = photosMargin;
-
-          doc.setFont("courier", "bold");
-          doc.setFontSize(FONT_SECTION);
-          doc.text("Work Photos", photosMargin, yPhotos);
-          yPhotos += 5;
-
-          const topY           = yPhotos;
-          const availableWidth = pW - 2 * photosMargin;
-          const availableHeight= pH - topY - photosMargin;
-
-          const n = images.length;
-          const cols = n === 1 ? 1 : 2;
-          const rows = Math.ceil(n / cols);
-
-          const cellPad    = 2;
-          const cellWidth  = availableWidth / cols;
-          const cellHeight = availableHeight / rows;
-
-          images.forEach((img, index) => {
-            try {
-              const colIndex = index % cols;
-              const rowIndex = Math.floor(index / cols);
-
-              const cellX = photosMargin + colIndex * cellWidth;
-              const cellY = topY + rowIndex * cellHeight;
-
-              const iw = img.width;
-              const ih = img.height;
-
-              const scale = Math.min(
-                (cellWidth  - 2 * cellPad) / iw,
-                (cellHeight - 2 * cellPad - 10) / ih
-              );
-
-              const drawW = iw * scale;
-              const drawH = ih * scale;
-
-              const x   = cellX + (cellWidth  - drawW)  / 2;
-              const yIm = cellY + 4;
-
-              let format = "JPEG";
-              if (img.type === "image/png") format = "PNG";
-
-              doc.setDrawColor(200, 200, 200);
-              doc.rect(cellX, cellY, cellWidth, cellHeight);
-              doc.addImage(img.url, format, x, yIm, drawW, drawH);
-
-              const caption = (img.caption || "").trim();
-              if (caption) {
-                doc.setFont("courier", "normal");
-                doc.setFontSize(FONT_TABLE);
-                const capLines = doc.splitTextToSize(caption, cellWidth - 4);
-                const capY = cellY + cellHeight - 4;
-                doc.text(capLines, cellX + cellWidth / 2, capY, { align: "center" });
-              }
-            } catch (e) {
-              console.error("Failed to add photo to PDF:", e);
-            }
-          });
-        }
-      }
-
-      // ---- Page numbers ----
-      const pageCount = doc.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        doc.setPage(i);
-        const pw = doc.internal.pageSize.getWidth();
-        const ph = doc.internal.pageSize.getHeight();
-        const footerText = `Page ${i} of ${pageCount}`;
-        doc.setFont("courier", "normal");
-        doc.setFontSize(FONT_FOOTER);
-        const textWidth = doc.getTextWidth(footerText);
-        doc.text(footerText, pw - margin - textWidth, ph - 7);
-      }
-
-      const safeClient = clientName || "client";
-      const fileName   = `forestme-report-${safeClient}-${fileDate}.pdf`;
-      doc.save(fileName);
-
-    } catch (err) {
-      console.error("PDF error:", err);
-      alert("Error creating PDF: " + (err && err.message ? err.message : err));
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "Generate PDF";
-    }
-  });
-});
 </script>
 </body>
 </html>
