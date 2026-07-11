@@ -294,7 +294,7 @@ const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxBXWXpuP34PLsyu7QdKqB
 // ↓↓↓ THE ONLY EDIT YOU MAKE ↓↓↓
 // Double-click the word  CHANGEME  below and type your secret phrase in its place.
 // Keep the two straight quotes around it. Example:  const SECRET = 'my-secret-phrase';
-const SECRET   = 'what-the-fuck-is-wrong-with-the-world';
+const SECRET   = 'CHANGEME';
 // ↑↑↑ THE ONLY EDIT YOU MAKE ↑↑↑
 
 // Routing: the report is emailed to the address the client enters at sign-off,
@@ -687,7 +687,7 @@ async function buildPdf(d) {
       doc.addImage(ph.dataUrl, 'JPEG', x + (cw - iw) / 2, py, iw, ih);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(...BRAND.g700);
       const cap = doc.splitTextToSize(`${i + 1}. ${ph.desc}`, cw).slice(0, 2);
-      doc.text(cap, x, py + imgH + 3.5);
+      doc.text(cap, x + cw / 2, py + imgH + 3.5, { align: 'center' });
     });
     y += rows * cellH + 4;
   }
