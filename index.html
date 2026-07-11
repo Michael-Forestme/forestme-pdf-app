@@ -294,7 +294,7 @@ const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxBXWXpuP34PLsyu7QdKqB
 // ↓↓↓ THE ONLY EDIT YOU MAKE ↓↓↓
 // Double-click the word  CHANGEME  below and type your secret phrase in its place.
 // Keep the two straight quotes around it. Example:  const SECRET = 'my-secret-phrase';
-const SECRET   = 'what-the-fuck-is-wrong-with-the-world';
+const SECRET   = 'CHANGEME';
 // ↑↑↑ THE ONLY EDIT YOU MAKE ↑↑↑
 
 // Routing: the report is emailed to the address the client enters at sign-off,
@@ -383,6 +383,7 @@ function xhrHours(from, to) {
 function addXhr(focus) {
   const box = $('xhrs');
   const n = box.children.length + 1;
+  const crewOpts = Array.from({ length: 30 }, (_, i) => `<option>${i + 1}</option>`).join('');
   const d = document.createElement('div'); d.className = 'issue';
   d.innerHTML = `<span class="tag">ENTRY ${n} <span class="x-hrs"></span></span>
     <div class="row3">
@@ -391,16 +392,23 @@ function addXhr(focus) {
       <div><label class="f">From</label><input type="time" class="x-from"></div>
       <div><label class="f">To</label><input type="time" class="x-to"></div>
     </div>
+    <label class="f">Crew involved</label>
+    <select class="x-crew"><option value="">Select…</option>${crewOpts}</select>
     <label class="f">Reason</label>
     <input type="text" class="x-reason" placeholder="e.g. waiting on plant delivery / unloading plants and materials / etc.">
     <label class="f">Description — what happened, who approved it</label>
     <input type="text" class="x-desc" placeholder="e.g. Truck 2 hrs late from nursery, stood down by Dave M">`;
   const upd = () => {
     const h = xhrHours(d.querySelector('.x-from').value, d.querySelector('.x-to').value);
-    d.querySelector('.x-hrs').textContent = h !== null ? `\u00b7 ${h.toFixed(2)} hrs` : '';
+    const c = Number(d.querySelector('.x-crew').value);
+    const el = d.querySelector('.x-hrs');
+    if (h === null) { el.textContent = ''; return; }
+    el.textContent = c
+      ? `\u00b7 ${h.toFixed(2)} hrs \u00d7 ${c} crew = ${(h * c).toFixed(2)} total hrs`
+      : `\u00b7 ${h.toFixed(2)} hrs each`;
   };
-  d.querySelector('.x-from').addEventListener('input', upd);
-  d.querySelector('.x-to').addEventListener('input', upd);
+  ['.x-from', '.x-to', '.x-crew'].forEach(s => d.querySelector(s).addEventListener('input', upd));
+  d.querySelector('.x-crew').addEventListener('change', upd);
   box.appendChild(d);
   if (focus) d.querySelector('.x-type').focus();
 }
@@ -517,12 +525,15 @@ function gather() {
   const xhrs = [], xhrsIncomplete = [];
   document.querySelectorAll('#xhrs .issue').forEach((d, i) => {
     const type = d.querySelector('.x-type').value, from = d.querySelector('.x-from').value,
-          to = d.querySelector('.x-to').value, reason = d.querySelector('.x-reason').value.trim(),
+          to = d.querySelector('.x-to').value, crew = d.querySelector('.x-crew').value,
+          reason = d.querySelector('.x-reason').value.trim(),
           desc = d.querySelector('.x-desc').value.trim();
-    const touched = type || from || to || reason || desc;
+    const touched = type || from || to || crew || reason || desc;
     if (!touched) return;
-    if (type && from && to && reason && desc) xhrs.push([type, from, to, xhrHours(from, to), reason, desc]);
-    else xhrsIncomplete.push(i + 1);
+    if (type && from && to && crew && reason && desc) {
+      const each = xhrHours(from, to);
+      xhrs.push([type, from, to, each, Number(crew), each * Number(crew), reason, desc]);
+    } else xhrsIncomplete.push(i + 1);
   });
   return {
     client: $('fClient').value.trim(),
@@ -555,7 +566,7 @@ function problems(d) {
   const unanswered = take5Answers.filter(a => a === null).length;
   if (unanswered) p.push(`${unanswered} Take 5 check${unanswered > 1 ? 's' : ''}`);
   if (!d.works) p.push('works completed');
-  if (d.xhrsIncomplete.length) p.push(`extra hours entry ${d.xhrsIncomplete.join(', ')} (times + reason + description)`);
+  if (d.xhrsIncomplete.length) p.push(`extra hours entry ${d.xhrsIncomplete.join(', ')} (times + crew + reason + description)`);
   const noDesc = d.photos.filter(ph => !ph.desc.trim()).length;
   if (noDesc) p.push(`${noDesc} photo description${noDesc > 1 ? 's' : ''}`);
   if (!d.noRep) {
@@ -636,16 +647,17 @@ async function buildPdf(d) {
 
   if (d.xhrs.length) {
     room(45); H('Extra hours — stand-down, labour & inductions');
-    const total = d.xhrs.reduce((s, r) => s + (r[3] || 0), 0);
+    const total = d.xhrs.reduce((s, r) => s + (r[5] || 0), 0);
     doc.autoTable({ startY: y, margin: { left: M, right: M },
-      head: [['Type', 'From', 'To', 'Hrs', 'Reason', 'Description']],
-      body: d.xhrs.map(r => [r[0], r[1], r[2], r[3].toFixed(2), r[4], r[5]]),
-      foot: [['Total', '', '', total.toFixed(2), '', '']],
+      head: [['Type', 'From', 'To', 'Hrs\neach', 'Crew', 'Total\nhrs', 'Reason', 'Description']],
+      body: d.xhrs.map(r => [r[0], r[1], r[2], r[3].toFixed(2), r[4], r[5].toFixed(2), r[6], r[7]]),
+      foot: [['Total hours claimed', '', '', '', '', total.toFixed(2), '', '']],
       styles: { font: 'helvetica', fontSize: 8.5, textColor: BRAND.ink, cellPadding: 1.6 },
-      headStyles: { fillColor: BRAND.g900, textColor: 255, fontStyle: 'bold', fontSize: 8.5 },
+      headStyles: { fillColor: BRAND.g900, textColor: 255, fontStyle: 'bold', fontSize: 8 },
       footStyles: { fillColor: BRAND.g100, textColor: BRAND.ink, fontStyle: 'bold' },
       alternateRowStyles: { fillColor: [246, 251, 248] },
-      columnStyles: { 1: { cellWidth: 14 }, 2: { cellWidth: 14 }, 3: { cellWidth: 12 } } });
+      columnStyles: { 1: { cellWidth: 12 }, 2: { cellWidth: 12 }, 3: { cellWidth: 12 },
+                      4: { cellWidth: 11 }, 5: { cellWidth: 13 } } });
     y = doc.lastAutoTable.finalY + 7;
   }
 
